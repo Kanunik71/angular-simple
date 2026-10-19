@@ -1,9 +1,11 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { UserType, UserDraftType } from '../../../models/user/user.models';
+import { allRoutes } from '../../../core/router/all-routes';
+import { RouterService } from '../../../core/router/router.service';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UserForm } from '../../../entities/user/user-form/user-form';
 import { UsersState } from '../users.state';
@@ -16,7 +18,7 @@ import { UsersState } from '../users.state';
 })
 export class UserFormPage {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private readonly router = inject(RouterService);
   protected readonly state = inject(UsersState);
 
   private readonly params = toSignal(this.route.paramMap, {
@@ -45,7 +47,7 @@ export class UserFormPage {
         return;
       }
       this.seenSaves = saves;
-      void this.router.navigateByUrl('/users');
+      void this.router.go(allRoutes.users.list());
     });
   }
 
@@ -61,6 +63,6 @@ export class UserFormPage {
 
   protected back(): void {
     this.state.clearFormError();
-    void this.router.navigateByUrl('/users');
+    void this.router.go(allRoutes.users.list());
   }
 }

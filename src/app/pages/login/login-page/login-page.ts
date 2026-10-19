@@ -1,9 +1,10 @@
 import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AuthState } from '../../../core/auth/auth.state';
+import { allRoutes } from '../../../core/router/all-routes';
+import { RouterService } from '../../../core/router/router.service';
 import { FormValidators } from '../../../utils/forms/form.validators';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiInput } from '../../../ui-core/input/ui-input';
@@ -16,7 +17,7 @@ import { UiInput } from '../../../ui-core/input/ui-input';
 })
 export class LoginPage {
   private readonly auth = inject(AuthState);
-  private readonly router = inject(Router);
+  private readonly router = inject(RouterService);
   private readonly translate = inject(TranslateService);
 
   protected readonly loading = this.auth.loading;
@@ -29,7 +30,7 @@ export class LoginPage {
   constructor() {
     effect(() => {
       if (this.auth.isAuthenticated()) {
-        void this.router.navigateByUrl('/users');
+        void this.router.go(allRoutes.users.list());
       }
     });
   }

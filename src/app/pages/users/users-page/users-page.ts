@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { UserType } from '../../../models/user/user.models';
 import { roleLabel } from '../../../models/user/user-role.models';
 import { AuthState } from '../../../core/auth/auth.state';
+import { allRoutes } from '../../../core/router/all-routes';
+import { RouterService } from '../../../core/router/router.service';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiModal } from '../../../ui-core/modal/ui-modal';
 import { UsersState } from '../users.state';
@@ -16,7 +17,7 @@ import { UsersState } from '../users.state';
   styleUrl: './users-page.scss',
 })
 export class UsersPage {
-  private readonly router = inject(Router);
+  private readonly router = inject(RouterService);
   private readonly auth = inject(AuthState);
   protected readonly state = inject(UsersState);
 
@@ -25,11 +26,11 @@ export class UsersPage {
   protected readonly pendingDelete = signal<UserType | null>(null);
 
   protected openCreate(): void {
-    void this.router.navigateByUrl('/users/new');
+    void this.router.go(allRoutes.users.new());
   }
 
   protected openEdit(user: UserType): void {
-    void this.router.navigate(['/users', user.id, 'edit']);
+    void this.router.go(allRoutes.users.edit(user.id));
   }
 
   protected confirmDelete(): void {
@@ -43,6 +44,6 @@ export class UsersPage {
 
   protected logout(): void {
     this.auth.logout();
-    void this.router.navigateByUrl('/login');
+    void this.router.go(allRoutes.login());
   }
 }
