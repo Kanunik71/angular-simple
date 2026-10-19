@@ -3,6 +3,14 @@ import type { TranslationObject } from '@ngx-translate/core';
 export const APP_LANG = 'ru';
 
 export const RU: TranslationObject = {
+  app: {
+    title: 'Справочник пользователей',
+    nav: 'Основная навигация',
+    navUsers: 'Пользователи',
+    session: 'Вы вошли как {{username}}',
+    logout: 'Выйти',
+    footer: 'Учебное приложение. Данные хранятся в памяти вкладки.',
+  },
   common: {
     cancel: 'Отмена',
     backToList: 'К списку',
@@ -12,6 +20,12 @@ export const RU: TranslationObject = {
   roles: {
     user: 'Пользователь',
     admin: 'Администратор',
+  },
+  pagination: {
+    label: 'Постраничная навигация',
+    previous: 'Назад',
+    next: 'Вперёд',
+    page: 'Страница {{page}} из {{total}}',
   },
   login: {
     title: 'Вход',
@@ -23,9 +37,9 @@ export const RU: TranslationObject = {
   },
   users: {
     title: 'Пользователи',
-    session: 'Вы вошли как {{username}}',
     add: 'Добавить',
-    logout: 'Выйти',
+    search: 'Поиск',
+    allRoles: 'Все роли',
     columnName: 'Имя',
     columnEmail: 'Email',
     columnRole: 'Роль',
@@ -34,6 +48,7 @@ export const RU: TranslationObject = {
     remove: 'Удалить',
     empty: 'Пользователей пока нет',
     loadError: 'Не удалось загрузить пользователей',
+    loadUserError: 'Не удалось загрузить пользователя',
     saveError: 'Не удалось сохранить пользователя',
     removeError: 'Не удалось удалить пользователя',
     deleteTitle: 'Удаление пользователя',

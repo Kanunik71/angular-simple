@@ -5,13 +5,14 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { UserType, UserDraftType, UserRoleEnum } from '../../../models/user/user.models';
 import { ROLE_OPTIONS } from '../../../models/user/user-role.models';
 import { FormValidators } from '../../../utils/forms/form.validators';
+import { UiAlert } from '../../../ui-core/alert/ui-alert';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiInput } from '../../../ui-core/input/ui-input';
 import { UiSelect } from '../../../ui-core/select/ui-select';
 
 @Component({
   selector: 'app-user-form',
-  imports: [ReactiveFormsModule, TranslatePipe, UiButton, UiInput, UiSelect],
+  imports: [ReactiveFormsModule, TranslatePipe, UiAlert, UiButton, UiInput, UiSelect],
   templateUrl: './user-form.html',
   styleUrl: './user-form.scss',
 })

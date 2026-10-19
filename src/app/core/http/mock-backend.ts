@@ -41,7 +41,7 @@ export class MockBackend implements HttpBackend {
     }
 
     if (req.method === 'GET' && path === USERS_PATH) {
-      return this.users.list();
+      return this.users.listFromParams(req.params);
     }
 
     if (req.method === 'POST' && path === USERS_PATH) {
@@ -49,6 +49,10 @@ export class MockBackend implements HttpBackend {
     }
 
     const userId = path.match(USER_PATH)?.[1];
+    if (userId && req.method === 'GET') {
+      return this.users.get(userId);
+    }
+
     if (userId && req.method === 'PUT') {
       return this.users.update(userId, req.body as UserDraftType);
     }

@@ -1,72 +1,59 @@
-<section class="users-page">
-  <header class="users-page__header">
-    <div class="users-page__intro">
-      <h1 class="users-page__title">{{ 'users.title' | translate }}</h1>
-      <p class="users-page__session">
-        {{ 'users.session' | translate: { username: sessionName()?.username } }}
-      </p>
-    </div>
-    <div class="users-page__actions">
-      <button uiButton type="button" (click)="openCreate()">{{ 'users.add' | translate }}</button>
-      <button uiButton type="button" variant="ghost" (click)="logout()">
-        {{ 'users.logout' | translate }}
-      </button>
-    </div>
-  </header>
+<app-page-container>
+  <app-page-header [title]="'users.title' | translate">
+    <button uiButton type="button" (click)="openCreate()">{{ 'users.add' | translate }}</button>
+  </app-page-header>
+
+  <div class="users-page__filters" [formGroup]="filterForm">
+    <ui-input
+      class="users-page__filter"
+      [label]="'users.search' | translate"
+      autocomplete="off"
+      formControlName="search"
+    />
+    <ui-select
+      class="users-page__filter"
+      [label]="'users.columnRole' | translate"
+      formControlName="role"
+      [options]="roleFilterOptions"
+    />
+  </div>
 
   @if (state.error()) {
-    <p class="users-page__error">{{ state.error() }}</p>
+    <ui-alert>{{ state.error() }}</ui-alert>
   }
 
-  @if (state.loading()) {
+  @if (state.loading() && state.users().length === 0) {
     <p class="users-page__status">{{ 'common.loading' | translate }}</p>
   } @else {
-    <div class="users-page__table-wrap">
-      <table class="user-table">
-        <thead class="user-table__head">
-          <tr class="user-table__row">
-            <th class="user-table__cell">{{ 'users.columnName' | translate }}</th>
-            <th class="user-table__cell">{{ 'users.columnEmail' | translate }}</th>
-            <th class="user-table__cell">{{ 'users.columnRole' | translate }}</th>
-            <th class="user-table__cell user-table__cell--actions">
-              {{ 'users.columnActions' | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (user of state.users(); track user.id) {
-            <tr class="user-table__row">
-              <td class="user-table__cell user-table__cell--avatar">
-                <span class="user-avatar">{{ user.initials }}</span>
-              </td>
-              <td class="user-table__cell">{{ user.fullName }}</td>
-              <td class="user-table__cell">{{ user.email }}</td>
-              <td class="user-table__cell">
-                <span class="user-table__role" [class.user-table__role--admin]="user.isAdmin">
-                  {{ roleLabel(user.role) | translate }}
-                </span>
-              </td>
-              <td class="user-table__cell user-table__cell--actions">
-                <div class="user-table__actions">
-                  <button uiButton type="button" variant="ghost" (click)="openEdit(user)">
-                    {{ 'users.edit' | translate }}
-                  </button>
-                  <button uiButton type="button" variant="danger" (click)="pendingDelete.set(user)">
-                    {{ 'users.remove' | translate }}
-                  </button>
-                </div>
-              </td>
-            </tr>
-          } @empty {
-            <tr class="user-table__row">
-              <td class="user-table__cell user-table__cell--empty" colspan="5">
-                {{ 'users.empty' | translate }}
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <ui-card [flush]="true">
+      <ui-table
+        [rows]="state.users()"
+        [columns]="columns"
+        [rowKey]="rowKey"
+        emptyLabel="users.empty"
+      >
+        <ng-template uiTableRow let-user>
+          <tr
+            app-user-list-row
+            [user]="user"
+            (edit)="openEdit(user)"
+            (remove)="pendingDelete.set(user)"
+          ></tr>
+        </ng-template>
+      </ui-table>
+    </ui-card>
+  }
+
+  @if (state.loading() && state.users().length > 0) {
+    <p class="users-page__status">{{ 'common.loading' | translate }}</p>
+  }
+
+  @if (state.pageCount() > 1) {
+    <ui-pagination
+      [page]="state.page()"
+      [pageCount]="state.pageCount()"
+      (pageChange)="state.setPage($event)"
+    />
   }
 
   <ui-modal
@@ -92,4 +79,4 @@
       </button>
     </div>
   </ui-modal>
-</section>
+</app-page-container>

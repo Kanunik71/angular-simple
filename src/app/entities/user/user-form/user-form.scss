@@ -9,11 +9,3 @@
   justify-content: flex-end;
   gap: var(--space-sm);
 }
-
-.user-form__error {
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-sm);
-  background: var(--color-danger-soft);
-  color: var(--color-danger);
-  font-size: var(--font-size-sm);
-}

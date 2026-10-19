@@ -6,12 +6,14 @@ import { AuthState } from '../../../core/auth/auth.state';
 import { allRoutes } from '../../../core/router/all-routes';
 import { RouterService } from '../../../core/router/router.service';
 import { FormValidators } from '../../../utils/forms/form.validators';
+import { UiAlert } from '../../../ui-core/alert/ui-alert';
 import { UiButton } from '../../../ui-core/button/ui-button';
+import { UiCard } from '../../../ui-core/card/ui-card';
 import { UiInput } from '../../../ui-core/input/ui-input';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule, TranslatePipe, UiButton, UiInput],
+  imports: [ReactiveFormsModule, TranslatePipe, UiAlert, UiButton, UiCard, UiInput],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })

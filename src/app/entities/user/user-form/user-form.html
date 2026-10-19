@@ -18,7 +18,7 @@
     [error]="fieldError('role', 'userForm.role')"
   />
   @if (serverError()) {
-    <p class="user-form__error">{{ serverError() }}</p>
+    <ui-alert>{{ serverError() }}</ui-alert>
   }
   <div class="user-form__actions">
     <button uiButton type="button" variant="secondary" (click)="cancelled.emit()">

@@ -1,0 +1,37 @@
+.user-list-row__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.user-list-row__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-border);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.user-list-row__role {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.user-list-row__role--admin {
+  background: var(--color-border);
+  color: var(--color-text);
+}
+
+.user-list-row__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}

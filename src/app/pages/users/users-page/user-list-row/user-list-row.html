@@ -1,0 +1,22 @@
+<td uiTableCell>
+  <div class="user-list-row__user">
+    <span class="user-list-row__avatar">{{ user().initials }}</span>
+    <span>{{ user().fullName }}</span>
+  </div>
+</td>
+<td uiTableCell>{{ user().email }}</td>
+<td uiTableCell>
+  <span class="user-list-row__role" [class.user-list-row__role--admin]="user().isAdmin">
+    {{ roleLabel(user().role) | translate }}
+  </span>
+</td>
+<td uiTableCell align="right">
+  <div class="user-list-row__actions">
+    <button uiButton type="button" variant="ghost" (click)="edit.emit()">
+      {{ 'users.edit' | translate }}
+    </button>
+    <button uiButton type="button" variant="danger" (click)="remove.emit()">
+      {{ 'users.remove' | translate }}
+    </button>
+  </div>
+</td>

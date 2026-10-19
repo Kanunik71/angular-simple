@@ -1,0 +1,9 @@
+:host {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+:host-context(tbody tr:last-child) {
+  border-bottom: 0;
+}

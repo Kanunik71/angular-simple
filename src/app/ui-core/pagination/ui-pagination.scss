@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.ui-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ui-pagination__status {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

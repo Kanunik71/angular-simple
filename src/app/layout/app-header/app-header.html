@@ -1,0 +1,27 @@
+<header class="app-header">
+  <div class="app-header__inner">
+    <a class="app-header__brand" [routerLink]="usersLink">{{ 'app.title' | translate }}</a>
+
+    <nav class="app-header__nav" [attr.aria-label]="'app.nav' | translate">
+      <a
+        class="app-header__link"
+        [routerLink]="usersLink"
+        routerLinkActive="app-header__link--active"
+        ariaCurrentWhenActive="page"
+      >
+        {{ 'app.navUsers' | translate }}
+      </a>
+    </nav>
+
+    @if (session(); as current) {
+      <div class="app-header__user">
+        <span class="app-header__username">
+          {{ 'app.session' | translate: { username: current.username } }}
+        </span>
+        <button uiButton type="button" variant="ghost" (click)="logout()">
+          {{ 'app.logout' | translate }}
+        </button>
+      </div>
+    }
+  </div>
+</header>

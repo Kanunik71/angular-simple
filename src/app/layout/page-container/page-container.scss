@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  width: min(1024px, calc(100% - 2 * var(--space-lg)));
+  margin: 0 auto;
+  padding: var(--space-xl) 0;
+}
+
+:host(.page-container--narrow) {
+  width: min(512px, calc(100% - 2 * var(--space-lg)));
+}

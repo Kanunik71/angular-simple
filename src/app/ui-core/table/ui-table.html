@@ -1,0 +1,24 @@
+<div class="ui-table__scroll">
+  <table class="ui-table">
+    <thead class="ui-table__head">
+      <tr class="ui-table__row">
+        @for (column of columns(); track column.key) {
+          <th uiTableCell [align]="column.align ?? 'left'">
+            {{ column.label | translate }}
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track rowKey()(row)) {
+        <ng-container *ngTemplateOutlet="rowTemplate().template; context: { $implicit: row }" />
+      } @empty {
+        <tr class="ui-table__row">
+          <td uiTableCell align="center" class="ui-table__empty" [attr.colspan]="columns().length">
+            {{ emptyLabel() | translate }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

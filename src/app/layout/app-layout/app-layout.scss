@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-layout__main {
+  flex: 1;
+}
