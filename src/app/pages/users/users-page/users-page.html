@@ -1,0 +1,95 @@
+<section class="users-page">
+  <header class="users-page__header">
+    <div class="users-page__intro">
+      <h1 class="users-page__title">{{ 'users.title' | translate }}</h1>
+      <p class="users-page__session">
+        {{ 'users.session' | translate: { username: sessionName()?.username } }}
+      </p>
+    </div>
+    <div class="users-page__actions">
+      <button uiButton type="button" (click)="openCreate()">{{ 'users.add' | translate }}</button>
+      <button uiButton type="button" variant="ghost" (click)="logout()">
+        {{ 'users.logout' | translate }}
+      </button>
+    </div>
+  </header>
+
+  @if (state.error()) {
+    <p class="users-page__error">{{ state.error() }}</p>
+  }
+
+  @if (state.loading()) {
+    <p class="users-page__status">{{ 'common.loading' | translate }}</p>
+  } @else {
+    <div class="users-page__table-wrap">
+      <table class="user-table">
+        <thead class="user-table__head">
+          <tr class="user-table__row">
+            <th class="user-table__cell">{{ 'users.columnName' | translate }}</th>
+            <th class="user-table__cell">{{ 'users.columnEmail' | translate }}</th>
+            <th class="user-table__cell">{{ 'users.columnRole' | translate }}</th>
+            <th class="user-table__cell user-table__cell--actions">
+              {{ 'users.columnActions' | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of state.users(); track user.id) {
+            <tr class="user-table__row">
+              <td class="user-table__cell user-table__cell--avatar">
+                <span class="user-avatar">{{ user.initials }}</span>
+              </td>
+              <td class="user-table__cell">{{ user.fullName }}</td>
+              <td class="user-table__cell">{{ user.email }}</td>
+              <td class="user-table__cell">
+                <span class="user-table__role" [class.user-table__role--admin]="user.isAdmin">
+                  {{ roleLabel(user.role) | translate }}
+                </span>
+              </td>
+              <td class="user-table__cell user-table__cell--actions">
+                <div class="user-table__actions">
+                  <button uiButton type="button" variant="ghost" (click)="openEdit(user)">
+                    {{ 'users.edit' | translate }}
+                  </button>
+                  <button uiButton type="button" variant="danger" (click)="pendingDelete.set(user)">
+                    {{ 'users.remove' | translate }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr class="user-table__row">
+              <td class="user-table__cell user-table__cell--empty" colspan="5">
+                {{ 'users.empty' | translate }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <ui-modal
+    [open]="pendingDelete() !== null"
+    [title]="'users.deleteTitle' | translate"
+    (closed)="pendingDelete.set(null)"
+  >
+    <p class="users-page__confirm">
+      {{ 'users.deleteConfirm' | translate: { name: pendingDelete()?.fullName } }}
+    </p>
+    <div class="users-page__confirm-actions">
+      <button uiButton type="button" variant="secondary" (click)="pendingDelete.set(null)">
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button
+        uiButton
+        type="button"
+        variant="danger"
+        [disabled]="state.saving()"
+        (click)="confirmDelete()"
+      >
+        {{ 'users.confirmDelete' | translate }}
+      </button>
+    </div>
+  </ui-modal>
+</section>

@@ -1,0 +1,14 @@
+<label class="ui-field__label" [attr.for]="fieldId">{{ label() }}</label>
+<input
+  class="ui-field__control"
+  [id]="fieldId"
+  [type]="type()"
+  [value]="value()"
+  [disabled]="disabled()"
+  [attr.autocomplete]="autocomplete()"
+  [attr.aria-invalid]="error() ? true : null"
+  [attr.aria-describedby]="error() ? errorId : null"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+/>
+<span class="ui-field__error" [id]="errorId">{{ error() }}</span>

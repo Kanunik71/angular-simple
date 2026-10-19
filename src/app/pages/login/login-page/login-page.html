@@ -1,0 +1,30 @@
+<section class="login-page">
+  <form class="login-page__card" [formGroup]="form" (ngSubmit)="submit()">
+    <header class="login-page__header">
+      <h1 class="login-page__title">{{ 'login.title' | translate }}</h1>
+      <p class="login-page__hint">{{ 'login.hint' | translate }}</p>
+    </header>
+
+    <ui-input
+      [label]="'login.username' | translate"
+      autocomplete="username"
+      formControlName="username"
+      [error]="fieldError('username', 'login.username' | translate)"
+    />
+    <ui-input
+      [label]="'login.password' | translate"
+      type="password"
+      autocomplete="current-password"
+      formControlName="password"
+      [error]="fieldError('password', 'login.password' | translate)"
+    />
+
+    @if (error()) {
+      <p class="login-page__error">{{ error() }}</p>
+    }
+
+    <button uiButton class="login-page__submit" type="submit" [disabled]="loading()">
+      {{ (loading() ? 'login.submitting' : 'login.submit') | translate }}
+    </button>
+  </form>
+</section>

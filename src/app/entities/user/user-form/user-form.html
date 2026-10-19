@@ -1,0 +1,31 @@
+<form class="user-form" [formGroup]="form" (ngSubmit)="submit()">
+  <ui-input
+    [label]="'userForm.name' | translate"
+    formControlName="fullName"
+    [error]="fieldError('fullName', 'userForm.name')"
+  />
+  <ui-input
+    [label]="'userForm.email' | translate"
+    type="email"
+    autocomplete="off"
+    formControlName="email"
+    [error]="fieldError('email', 'userForm.email')"
+  />
+  <ui-select
+    [label]="'userForm.role' | translate"
+    formControlName="role"
+    [options]="roles"
+    [error]="fieldError('role', 'userForm.role')"
+  />
+  @if (serverError()) {
+    <p class="user-form__error">{{ serverError() }}</p>
+  }
+  <div class="user-form__actions">
+    <button uiButton type="button" variant="secondary" (click)="cancelled.emit()">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button uiButton type="submit" [disabled]="saving()">
+      {{ (saving() ? 'userForm.saving' : 'userForm.save') | translate }}
+    </button>
+  </div>
+</form>

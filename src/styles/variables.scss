@@ -1,0 +1,25 @@
+:root {
+  --color-bg: var(--palette-slate-50);
+  --color-surface: var(--palette-white);
+  --color-surface-muted: var(--palette-slate-100);
+  --color-text: var(--palette-ink);
+  --color-text-muted: var(--palette-slate-500);
+  --color-border: var(--palette-slate-200);
+  --color-primary: var(--palette-blue-600);
+  --color-primary-hover: var(--palette-blue-700);
+  --color-danger: var(--palette-red-600);
+  --color-danger-soft: var(--palette-red-50);
+  --color-on-primary: var(--palette-white);
+  --font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --shadow-card: 0 8px 24px rgb(28 36 48 / 8%);
+  --shadow-panel: 0 16px 40px rgb(28 36 48 / 16%);
+}

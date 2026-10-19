@@ -1,0 +1,29 @@
+<section class="user-form-page">
+  <header class="user-form-page__header">
+    <h1 class="user-form-page__title">{{ titleKey() | translate }}</h1>
+    <button uiButton type="button" variant="ghost" (click)="back()">
+      {{ 'common.backToList' | translate }}
+    </button>
+  </header>
+
+  <div class="user-form-page__card">
+    @if (state.loading() && userId()) {
+      <p class="user-form-page__status">{{ 'common.loading' | translate }}</p>
+    } @else if (missing()) {
+      <div class="user-form-page__missing">
+        <p class="user-form-page__status">{{ 'userForm.notFound' | translate }}</p>
+        <button uiButton type="button" (click)="back()">
+          {{ 'common.backToList' | translate }}
+        </button>
+      </div>
+    } @else {
+      <app-user-form
+        [user]="user()"
+        [saving]="state.saving()"
+        [serverError]="state.formError()"
+        (submitted)="save($event)"
+        (cancelled)="back()"
+      />
+    }
+  </div>
+</section>

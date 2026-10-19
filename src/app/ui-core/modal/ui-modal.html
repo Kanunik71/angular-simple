@@ -1,0 +1,26 @@
+@if (open()) {
+  <div
+    #panel
+    class="ui-modal"
+    role="dialog"
+    aria-modal="true"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    [attr.aria-labelledby]="titleId"
+  >
+    <header class="ui-modal__header">
+      <h2 class="ui-modal__title" [id]="titleId">{{ title() }}</h2>
+      <button
+        type="button"
+        class="ui-modal__close"
+        [attr.aria-label]="'common.close' | translate"
+        (click)="requestClose()"
+      >
+        ×
+      </button>
+    </header>
+    <div class="ui-modal__body">
+      <ng-content />
+    </div>
+  </div>
+}
