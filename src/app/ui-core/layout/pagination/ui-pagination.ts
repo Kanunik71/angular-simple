@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { UiButton } from '../button/ui-button';
+import { UiButton } from '../../common/button/ui-button';
 
 @Component({
   selector: 'ui-pagination',

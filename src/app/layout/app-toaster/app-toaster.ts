@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 
-import { ToastService } from '../../ui-core/toast/toast.service';
-import { UiToast } from '../../ui-core/toast/ui-toast';
+import { ToastService } from '../../ui-core/common/toast/toast.service';
+import { UiToast } from '../../ui-core/common/toast/ui-toast';
 
 @Component({
   selector: 'app-toaster',

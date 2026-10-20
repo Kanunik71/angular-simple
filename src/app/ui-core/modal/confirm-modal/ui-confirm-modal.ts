@@ -1,9 +1,9 @@
 import { Component, inject, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { UiButton } from '../button/ui-button';
-import { MODAL_REF } from '../modal/modal-ref';
-import { UiModal } from '../modal/ui-modal';
+import { UiButton } from '../../common/button/ui-button';
+import { MODAL_REF } from '../modal-ref';
+import { UiModal } from '../ui-modal';
 
 export interface UiConfirmModalConfig {
   title: string;

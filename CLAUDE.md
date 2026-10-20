@@ -87,7 +87,7 @@ pages     ->  *.routes.ts + <name>-page/<name>-page.ts  ->  *.state.ts  ->  Auth
 entities  ->  <entity>/<component>/<component>.ts
 services  ->  <entity>/<entity>.service.ts + <entity>.mapper.ts
 models    ->  типы по сущностям
-ui-core   ->  button, input, select, modal
+ui-core   ->  common, form, layout, modal
 utils     ->  классы со статическими методами
 i18n      ->  словарь, лоадер, провайдер переводов
 core      ->  инфраструктура: api, http, auth, router
@@ -147,7 +147,7 @@ Barrel-файлов нет: импортируем нужный файл нап�
 
 - Не импортирует из `pages`. Иначе «общий» компонент оказывается привязан к секции, ради которой его выносили
 - Не ходит в API и не держит состояние — только `input` и `output`. Состояние и HTTP остаются в `pages/<section>/<section>.state.ts`
-- Та же схема вложенности, что в `ui-core` и `pages`: `<entity>/<component>/<component>.ts`
+- Вложенность как в `pages`: `<entity>/<component>/<component>.ts`; в `ui-core` компонент лежит внутри группы
 - **Критерий переезда:** подкомпонент уезжает из своей страницы в `entities`, когда понадобился второй странице. Не заранее
 
 Граница с `ui-core`: `ui-core` — про что угодно и ни про какую сущность, `entities` — про конкретную сущность. `UserCreateUpdateForm` знает про `ROLE_OPTIONS`, поэтому в `ui-core` ему нельзя.
@@ -226,6 +226,13 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 
 ## ui-core
 
+Компоненты сгруппированы по назначению:
+
+- `common/` — `ui-alert`, `ui-button`, `ui-skeleton`, `ui-spinner`, `ui-toast`
+- `form/` — `ui-form`, `ui-form-actions`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
+- `layout/` — `ui-card`, `ui-pagination`, `ui-table`
+- `modal/` — `ui-modal`, `ModalService` / `ModalRef`, `ui-confirm-modal`
+
 - `button[uiButton]` — варианты `primary`, `secondary`, `ghost`, `danger`. Нативный `type` и `disabled` остаются на кнопке.
 - `ui-input` и `ui-select` реализуют `ControlValueAccessor`.
 - В `ui-select` выбранный вариант помечается через `[selected]` на `<option>`, а не через `[value]` на `<select>`: биндинг `value` применяется раньше, чем `@for` создаёт сами `<option>`, и значение терялось бы.
@@ -260,6 +267,6 @@ Backdrop модалки — единственное глобальное пра
 3. Провайдить state на маршруте, а не в `root`.
 4. Ходить в бекенд через отдельный API-класс и `HttpClient`. Доступ приложения к API — через `src/app/services/<entity>/<entity>.service.ts`, который маппит ответы в доменные модели.
 5. Новый ответ мока добавить в `*.api.mock.ts` рядом с его API-классом и в карту маршрутов `MockBackend`.
-6. Повторяемые контролы класть в `ui-core`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Type`, перечисление с `Enum`, файл с `.models.ts`.
+6. Повторяемые контролы класть в `ui-core` в подходящую группу: `common`, `form`, `layout`, `modal`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Type`, перечисление с `Enum`, файл с `.models.ts`.
 7. Стили страницы писать по БЭМ и на токенах из `variables.scss`. Новый сырой цвет — только в `palette.scss`. Размеры в `px`, без `rem` и `em`.
 8. Все пользовательские строки брать из словаря: в шаблоне `| translate`, в TypeScript `translate.instant()`. Новый ключ добавлять в `i18n/ru.ts`.

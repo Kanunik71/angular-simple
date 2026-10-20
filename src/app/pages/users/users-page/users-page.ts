@@ -10,18 +10,21 @@ import { allRoutes } from '../../../core/router/all-routes';
 import { RouterService } from '../../../core/router/router.service';
 import { PageContainer } from '../../../layout/page-container/page-container';
 import { PageHeader } from '../../../layout/page-header/page-header';
-import { UiAlert } from '../../../ui-core/alert/ui-alert';
-import { UiButton } from '../../../ui-core/button/ui-button';
-import { UiCard } from '../../../ui-core/card/ui-card';
-import { UiFormField } from '../../../ui-core/form-field/ui-form-field';
-import { UiInput } from '../../../ui-core/input/ui-input';
+import { UiAlert } from '../../../ui-core/common/alert/ui-alert';
+import { UiButton } from '../../../ui-core/common/button/ui-button';
+import { UiSpinner } from '../../../ui-core/common/spinner/ui-spinner';
+import { UiFormField } from '../../../ui-core/form/form-field/ui-form-field';
+import { UiInput } from '../../../ui-core/form/input/ui-input';
+import { UiSelect } from '../../../ui-core/form/select/ui-select';
+import { UiCard } from '../../../ui-core/layout/card/ui-card';
+import { UiPagination } from '../../../ui-core/layout/pagination/ui-pagination';
+import { UiTable, UiTableColumn, UiTableRow } from '../../../ui-core/layout/table/ui-table';
+import {
+  UiTableSkeleton,
+  UiTableSkeletonRow,
+} from '../../../ui-core/layout/table/ui-table-skeleton';
 import { ModalRef } from '../../../ui-core/modal/modal-ref';
 import { ModalService } from '../../../ui-core/modal/modal.service';
-import { UiPagination } from '../../../ui-core/pagination/ui-pagination';
-import { UiSelect } from '../../../ui-core/select/ui-select';
-import { UiSpinner } from '../../../ui-core/spinner/ui-spinner';
-import { UiTable, UiTableColumn, UiTableRow } from '../../../ui-core/table/ui-table';
-import { UiTableSkeleton, UiTableSkeletonRow } from '../../../ui-core/table/ui-table-skeleton';
 import { UserListRow, UserListRowSkeleton } from './user-list-row/user-list-row';
 import { UsersPageState } from './users-page.state';
 import { UsersState } from '../users.state';

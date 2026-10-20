@@ -6,13 +6,13 @@ import { AuthState } from '../../../core/auth/auth.state';
 import { allRoutes } from '../../../core/router/all-routes';
 import { RouterService } from '../../../core/router/router.service';
 import { FormValidators } from '../../../utils/forms/form.validators';
-import { UiAlert } from '../../../ui-core/alert/ui-alert';
-import { UiButton } from '../../../ui-core/button/ui-button';
-import { UiCard } from '../../../ui-core/card/ui-card';
+import { UiAlert } from '../../../ui-core/common/alert/ui-alert';
+import { UiButton } from '../../../ui-core/common/button/ui-button';
 import { UiForm } from '../../../ui-core/form/ui-form';
 import { UiFormActions } from '../../../ui-core/form/ui-form-actions';
-import { UiFormField } from '../../../ui-core/form-field/ui-form-field';
-import { UiInput } from '../../../ui-core/input/ui-input';
+import { UiFormField } from '../../../ui-core/form/form-field/ui-form-field';
+import { UiInput } from '../../../ui-core/form/input/ui-input';
+import { UiCard } from '../../../ui-core/layout/card/ui-card';
 
 @Component({
   selector: 'app-login-page',

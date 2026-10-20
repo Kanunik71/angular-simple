@@ -10,7 +10,7 @@ import { ComponentState } from '../../core/state/component.state';
 import { ListState } from '../../core/state/list.state';
 import { UserService } from '../../services/user/user.service';
 import { ApiError } from '../../utils/http/api-error';
-import { ToastService } from '../../ui-core/toast/toast.service';
+import { ToastService } from '../../ui-core/common/toast/toast.service';
 
 @Injectable()
 export class UsersState {
