@@ -1,0 +1,11 @@
+<ui-modal [title]="title() | translate" (closed)="close(false)">
+  <p class="ui-confirm-modal__message">{{ message() | translate: messageParams() }}</p>
+  <div class="ui-confirm-modal__actions">
+    <button uiButton type="button" variant="secondary" (click)="close(false)">
+      {{ cancelLabel() | translate }}
+    </button>
+    <button uiButton type="button" [variant]="variant()" (click)="close(true)">
+      {{ confirmLabel() | translate }}
+    </button>
+  </div>
+</ui-modal>

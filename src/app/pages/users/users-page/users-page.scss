@@ -12,14 +12,3 @@
 .users-page__status {
   color: var(--color-text-muted);
 }
-
-.users-page__confirm {
-  color: var(--color-text);
-}
-
-.users-page__confirm-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-}

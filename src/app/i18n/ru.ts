@@ -13,6 +13,7 @@ export const RU: TranslationObject = {
   },
   common: {
     cancel: 'Отмена',
+    confirm: 'Подтвердить',
     backToList: 'К списку',
     close: 'Закрыть',
     loading: 'Загрузка…',

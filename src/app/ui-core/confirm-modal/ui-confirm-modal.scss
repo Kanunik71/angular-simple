@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.ui-confirm-modal__message {
+  color: var(--color-text);
+}
+
+.ui-confirm-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}

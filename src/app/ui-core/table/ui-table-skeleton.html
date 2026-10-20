@@ -1,0 +1,18 @@
+<div class="ui-table__scroll">
+  <table class="ui-table">
+    <thead class="ui-table__head">
+      <tr class="ui-table__row">
+        @for (column of columns(); track column.key) {
+          <th uiTableCell [align]="column.align ?? 'left'">
+            {{ column.label | translate }}
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of placeholders(); track row) {
+        <ng-container *ngTemplateOutlet="rowTemplate().template" />
+      }
+    </tbody>
+  </table>
+</div>

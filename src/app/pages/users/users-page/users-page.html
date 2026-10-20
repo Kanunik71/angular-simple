@@ -18,13 +18,23 @@
     />
   </div>
 
-  @if (state.error()) {
-    <ui-alert>{{ state.error() }}</ui-alert>
+  @if (page.state.error()) {
+    <ui-alert>{{ page.state.error() }}</ui-alert>
   }
 
-  @if (state.loading() && state.users().length === 0) {
-    <p class="users-page__status">{{ 'common.loading' | translate }}</p>
-  } @else {
+  @if (state.removeError()) {
+    <ui-alert>{{ state.removeError() }}</ui-alert>
+  }
+
+  @if (page.state.initialLoading()) {
+    <ui-card [flush]="true">
+      <ui-table-skeleton [columns]="columns">
+        <ng-template uiTableSkeletonRow>
+          <tr app-user-list-row-skeleton></tr>
+        </ng-template>
+      </ui-table-skeleton>
+    </ui-card>
+  } @else if (page.state.loaded()) {
     <ui-card [flush]="true">
       <ui-table
         [rows]="state.users()"
@@ -37,14 +47,14 @@
             app-user-list-row
             [user]="user"
             (edit)="openEdit(user)"
-            (remove)="pendingDelete.set(user)"
+            (remove)="requestDelete(user)"
           ></tr>
         </ng-template>
       </ui-table>
     </ui-card>
   }
 
-  @if (state.loading() && state.users().length > 0) {
+  @if (page.state.refreshing()) {
     <p class="users-page__status">{{ 'common.loading' | translate }}</p>
   }
 
@@ -55,28 +65,4 @@
       (pageChange)="state.setPage($event)"
     />
   }
-
-  <ui-modal
-    [open]="pendingDelete() !== null"
-    [title]="'users.deleteTitle' | translate"
-    (closed)="pendingDelete.set(null)"
-  >
-    <p class="users-page__confirm">
-      {{ 'users.deleteConfirm' | translate: { name: pendingDelete()?.fullName } }}
-    </p>
-    <div class="users-page__confirm-actions">
-      <button uiButton type="button" variant="secondary" (click)="pendingDelete.set(null)">
-        {{ 'common.cancel' | translate }}
-      </button>
-      <button
-        uiButton
-        type="button"
-        variant="danger"
-        [disabled]="state.saving()"
-        (click)="confirmDelete()"
-      >
-        {{ 'users.confirmDelete' | translate }}
-      </button>
-    </div>
-  </ui-modal>
 </app-page-container>

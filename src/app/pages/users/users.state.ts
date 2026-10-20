@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, catchError, of, switchMap } from 'rxjs';
 
-import { UserType, UserDraftType } from '../../models/user/user.models';
+import { UserDraftType, UserType } from '../../models/user/user.models';
 import { UserFilterType } from '../../models/user/user-filter.models';
+import { ComponentState } from '../../core/state/component.state';
 import { ListState } from '../../core/state/list.state';
 import { UserService } from '../../services/user/user.service';
 import { ApiError } from '../../utils/http/api-error';
@@ -22,6 +23,7 @@ export class UsersState {
     loadErrorKey: 'users.loadError',
     load: (query) => this.service.list(query),
   });
+  private readonly selectedRequests = new Subject<string | null>();
 
   readonly users = this.list.items;
   readonly total = this.list.total;
@@ -29,23 +31,43 @@ export class UsersState {
   readonly pageSize = this.list.pageSize;
   readonly pageCount = this.list.pageCount;
   readonly filters = this.list.filters;
-  readonly loading = this.list.loading;
-  readonly listError = this.list.error;
+  readonly listLoad = this.list.loadState;
 
   readonly saving = signal(false);
   readonly formError = signal<string | null>(null);
   readonly removeError = signal<string | null>(null);
-  readonly error = computed(() => this.listError() ?? this.removeError());
   readonly saved = signal(0);
 
   readonly selectedUser = signal<UserType | null>(null);
-  readonly selectedLoading = signal(false);
-  readonly selectedError = signal<string | null>(null);
-
-  private selectedRequest = 0;
+  readonly selectedId = signal<string | null>(null);
+  readonly selected = new ComponentState();
 
   constructor() {
-    this.list.load();
+    this.selectedRequests
+      .pipe(
+        switchMap((id) => {
+          if (!id) {
+            this.selectedUser.set(null);
+            this.selected.reset();
+            return of(null);
+          }
+
+          this.selectedUser.set(null);
+          return this.selected
+            .load(() => this.service.get(id), {
+              errorMessage: (error) => this.userErrorMessage(error),
+            })
+            .pipe(catchError(() => of(null)));
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((user) => {
+        if (user) {
+          this.selectedUser.set(user);
+        }
+      });
+
+    this.list.reload();
   }
 
   setPage(page: number): void {
@@ -61,42 +83,13 @@ export class UsersState {
   }
 
   loadUser(id: string): void {
-    const request = ++this.selectedRequest;
-    this.selectedLoading.set(true);
-    this.selectedUser.set(null);
-    this.selectedError.set(null);
-
-    this.service
-      .get(id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (user) => {
-          if (request !== this.selectedRequest) {
-            return;
-          }
-          this.selectedUser.set(user);
-          this.selectedLoading.set(false);
-        },
-        error: (error: unknown) => {
-          if (request !== this.selectedRequest) {
-            return;
-          }
-          this.selectedLoading.set(false);
-          if (error instanceof HttpErrorResponse && error.status === 404) {
-            return;
-          }
-          this.selectedError.set(
-            ApiError.message(error, this.translate.instant('users.loadUserError')),
-          );
-        },
-      });
+    this.selectedId.set(id);
+    this.selectedRequests.next(id);
   }
 
   clearSelected(): void {
-    this.selectedRequest++;
-    this.selectedUser.set(null);
-    this.selectedLoading.set(false);
-    this.selectedError.set(null);
+    this.selectedId.set(null);
+    this.selectedRequests.next(null);
   }
 
   create(draft: UserDraftType): void {
@@ -139,6 +132,14 @@ export class UsersState {
 
   clearFormError(): void {
     this.formError.set(null);
+  }
+
+  private userErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse && error.status === 404) {
+      return this.translate.instant('userForm.notFound');
+    }
+
+    return ApiError.message(error, this.translate.instant('users.loadUserError'));
   }
 
   private save(request: Observable<UserType>, after: (user: UserType) => void): void {

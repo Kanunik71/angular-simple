@@ -7,17 +7,18 @@
 
   <ui-card>
     @if (loading()) {
-      <p class="user-form-page__status">{{ 'common.loading' | translate }}</p>
-    } @else if (userId() && state.selectedError()) {
-      <div class="user-form-page__missing">
-        <ui-alert>{{ state.selectedError() }}</ui-alert>
-        <button uiButton type="button" (click)="back()">
-          {{ 'common.backToList' | translate }}
-        </button>
+      <div class="user-form-page__skeleton" aria-busy="true">
+        <ui-skeleton width="100%" height="40px" />
+        <ui-skeleton width="100%" height="40px" />
+        <ui-skeleton width="60%" height="40px" />
+        <div class="user-form-page__skeleton-actions">
+          <ui-skeleton width="96px" height="36px" />
+          <ui-skeleton width="120px" height="36px" />
+        </div>
       </div>
-    } @else if (missing()) {
+    } @else if (pageError()) {
       <div class="user-form-page__missing">
-        <p class="user-form-page__status">{{ 'userForm.notFound' | translate }}</p>
+        <ui-alert>{{ pageError() }}</ui-alert>
         <button uiButton type="button" (click)="back()">
           {{ 'common.backToList' | translate }}
         </button>

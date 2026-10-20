@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .ui-modal {
   width: min(448px, calc(100vw - 2 * var(--space-lg)));
   padding: var(--space-lg);
