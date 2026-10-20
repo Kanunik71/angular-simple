@@ -1,10 +1,9 @@
-<label class="ui-field__label" [attr.for]="fieldId">{{ label() }}</label>
 <select
   class="ui-field__control"
   [id]="fieldId"
   [disabled]="disabled()"
-  [attr.aria-invalid]="error() ? true : null"
-  [attr.aria-describedby]="error() ? errorId : null"
+  [attr.aria-invalid]="invalid ? true : null"
+  [attr.aria-describedby]="invalid ? errorId : null"
   (change)="onSelect($event)"
   (blur)="onBlur()"
 >
@@ -14,4 +13,3 @@
     </option>
   }
 </select>
-<span class="ui-field__error" [id]="errorId">{{ error() }}</span>

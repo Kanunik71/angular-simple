@@ -4,18 +4,12 @@
   </app-page-header>
 
   <div class="users-page__filters" [formGroup]="filterForm">
-    <ui-input
-      class="users-page__filter"
-      [label]="'users.search' | translate"
-      autocomplete="off"
-      formControlName="search"
-    />
-    <ui-select
-      class="users-page__filter"
-      [label]="'users.columnRole' | translate"
-      formControlName="role"
-      [options]="roleFilterOptions"
-    />
+    <ui-form-field class="users-page__filter" label="users.search">
+      <ui-input autocomplete="off" formControlName="search" />
+    </ui-form-field>
+    <ui-form-field class="users-page__filter" label="users.columnRole">
+      <ui-select formControlName="role" [options]="roleFilterOptions" />
+    </ui-form-field>
   </div>
 
   @if (page.state.error()) {

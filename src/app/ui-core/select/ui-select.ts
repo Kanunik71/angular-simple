@@ -1,6 +1,13 @@
-import { Component, forwardRef, input, signal } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Injector, OnInit, forwardRef, inject, input, signal } from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+} from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { UI_FORM_FIELD_CONTROL } from '../form-field/ui-form-field-control';
 
 export interface UiSelectOption {
   value: string;
@@ -21,20 +28,40 @@ let nextFieldId = 0;
       useExisting: forwardRef(() => UiSelect),
       multi: true,
     },
+    {
+      provide: UI_FORM_FIELD_CONTROL,
+      useExisting: forwardRef(() => UiSelect),
+    },
   ],
 })
-export class UiSelect implements ControlValueAccessor {
-  readonly label = input('');
+export class UiSelect implements ControlValueAccessor, OnInit {
   readonly options = input<UiSelectOption[]>([]);
-  readonly error = input<string | null>(null);
 
   protected readonly value = signal('');
   protected readonly disabled = signal(false);
-  protected readonly fieldId = `ui-select-${nextFieldId++}`;
-  protected readonly errorId = `${this.fieldId}-error`;
+  readonly fieldId = `ui-select-${nextFieldId++}`;
+  readonly errorId = `${this.fieldId}-error`;
+
+  private readonly controlState = signal<AbstractControl | null>(null);
+  private readonly injector = inject(Injector);
+  private ngControl: NgControl | null = null;
 
   private onChange: (value: string) => void = () => undefined;
   private onTouched: () => void = () => undefined;
+
+  get control(): AbstractControl | null {
+    return this.controlState();
+  }
+
+  protected get invalid(): boolean {
+    const control = this.control;
+    return control !== null && control.invalid && control.touched;
+  }
+
+  ngOnInit(): void {
+    this.ngControl = this.injector.get(NgControl, null, { self: true, optional: true });
+    this.controlState.set(this.ngControl?.control ?? null);
+  }
 
   writeValue(value: string | null): void {
     this.value.set(value ?? '');

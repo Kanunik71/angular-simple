@@ -13,6 +13,7 @@ import { PageHeader } from '../../../layout/page-header/page-header';
 import { UiAlert } from '../../../ui-core/alert/ui-alert';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiCard } from '../../../ui-core/card/ui-card';
+import { UiFormField } from '../../../ui-core/form-field/ui-form-field';
 import { UiInput } from '../../../ui-core/input/ui-input';
 import { ModalRef } from '../../../ui-core/modal/modal-ref';
 import { ModalService } from '../../../ui-core/modal/modal.service';
@@ -35,6 +36,7 @@ import { UsersState } from '../users.state';
     UiAlert,
     UiButton,
     UiCard,
+    UiFormField,
     UiInput,
     UiPagination,
     UiSelect,

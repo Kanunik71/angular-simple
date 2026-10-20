@@ -1,12 +1,5 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.ui-field__label {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  display: block;
 }
 
 .ui-field__control {
@@ -25,10 +18,4 @@
 
 .ui-field__control:disabled {
   background: var(--color-surface-muted);
-}
-
-.ui-field__error {
-  min-height: 18px;
-  font-size: 13px;
-  color: var(--color-danger);
 }

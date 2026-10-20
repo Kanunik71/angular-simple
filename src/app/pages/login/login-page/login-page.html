@@ -6,19 +6,12 @@
         <p class="login-page__hint">{{ 'login.hint' | translate }}</p>
       </header>
 
-      <ui-input
-        [label]="'login.username' | translate"
-        autocomplete="username"
-        formControlName="username"
-        [error]="fieldError('username', 'login.username' | translate)"
-      />
-      <ui-input
-        [label]="'login.password' | translate"
-        type="password"
-        autocomplete="current-password"
-        formControlName="password"
-        [error]="fieldError('password', 'login.password' | translate)"
-      />
+      <ui-form-field label="login.username">
+        <ui-input autocomplete="username" formControlName="username" />
+      </ui-form-field>
+      <ui-form-field label="login.password">
+        <ui-input type="password" autocomplete="current-password" formControlName="password" />
+      </ui-form-field>
 
       @if (error()) {
         <ui-alert>{{ error() }}</ui-alert>

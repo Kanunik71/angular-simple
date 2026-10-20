@@ -1,22 +1,13 @@
 <form class="user-form" [formGroup]="form" (ngSubmit)="submit()">
-  <ui-input
-    [label]="'userForm.name' | translate"
-    formControlName="fullName"
-    [error]="fieldError('fullName', 'userForm.name')"
-  />
-  <ui-input
-    [label]="'userForm.email' | translate"
-    type="email"
-    autocomplete="off"
-    formControlName="email"
-    [error]="fieldError('email', 'userForm.email')"
-  />
-  <ui-select
-    [label]="'userForm.role' | translate"
-    formControlName="role"
-    [options]="roles"
-    [error]="fieldError('role', 'userForm.role')"
-  />
+  <ui-form-field label="userForm.name">
+    <ui-input formControlName="fullName" />
+  </ui-form-field>
+  <ui-form-field label="userForm.email">
+    <ui-input type="email" autocomplete="off" formControlName="email" />
+  </ui-form-field>
+  <ui-form-field label="userForm.role">
+    <ui-select formControlName="role" [options]="roles" />
+  </ui-form-field>
   @if (serverError()) {
     <ui-alert>{{ serverError() }}</ui-alert>
   }

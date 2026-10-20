@@ -1,6 +1,6 @@
 import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { AuthState } from '../../../core/auth/auth.state';
 import { allRoutes } from '../../../core/router/all-routes';
@@ -9,18 +9,18 @@ import { FormValidators } from '../../../utils/forms/form.validators';
 import { UiAlert } from '../../../ui-core/alert/ui-alert';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiCard } from '../../../ui-core/card/ui-card';
+import { UiFormField } from '../../../ui-core/form-field/ui-form-field';
 import { UiInput } from '../../../ui-core/input/ui-input';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule, TranslatePipe, UiAlert, UiButton, UiCard, UiInput],
+  imports: [ReactiveFormsModule, TranslatePipe, UiAlert, UiButton, UiCard, UiFormField, UiInput],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })
 export class LoginPage {
   private readonly auth = inject(AuthState);
   private readonly router = inject(RouterService);
-  private readonly translate = inject(TranslateService);
 
   protected readonly loading = this.auth.loading;
   protected readonly error = this.auth.error;
@@ -45,13 +45,5 @@ export class LoginPage {
 
     const { username, password } = this.form.getRawValue();
     this.auth.login(username.trim(), password);
-  }
-
-  protected fieldError(name: 'username' | 'password', label: string): string | null {
-    const control = this.form.controls[name];
-    if (!control.touched || !control.errors?.['required']) {
-      return null;
-    }
-    return this.translate.instant('errors.required', { label });
   }
 }
