@@ -1,0 +1,7 @@
+@for (toast of toastService.toasts(); track toast.id) {
+  <ui-toast
+    [variant]="toast.variant"
+    [message]="toast.message"
+    (closed)="toastService.dismiss(toast.id)"
+  />
+}

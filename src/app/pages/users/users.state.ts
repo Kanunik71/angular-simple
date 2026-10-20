@@ -10,17 +10,20 @@ import { ComponentState } from '../../core/state/component.state';
 import { ListState } from '../../core/state/list.state';
 import { UserService } from '../../services/user/user.service';
 import { ApiError } from '../../utils/http/api-error';
+import { ToastService } from '../../ui-core/toast/toast.service';
 
 @Injectable()
 export class UsersState {
   private readonly service = inject(UserService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
+  private readonly toast = inject(ToastService);
 
   private readonly list = new ListState<UserType, UserFilterType>({
     initialFilters: { search: '', role: '' },
     pageSize: 10,
-    loadErrorKey: 'users.loadError',
+    errorMessage: (error) =>
+      this.notifyError(error, ApiError.message(error, this.translate.instant('users.loadError'))),
     load: (query) => this.service.list(query),
   });
   private readonly selectedRequests = new Subject<string | null>();
@@ -93,13 +96,17 @@ export class UsersState {
   }
 
   create(draft: UserDraftType): void {
-    this.save(this.service.create(draft), () => this.list.loadFirst());
+    this.save(this.service.create(draft), () => {
+      this.list.loadFirst();
+      this.toast.success(this.translate.instant('users.created'));
+    });
   }
 
   update(id: string, draft: UserDraftType): void {
     this.save(this.service.update(id, draft), (user) => {
       this.selectedUser.set(user);
       this.list.reload();
+      this.toast.success(this.translate.instant('users.updated'));
     });
   }
 
@@ -119,11 +126,15 @@ export class UsersState {
             this.clearSelected();
           }
           this.list.reload();
+          this.toast.success(this.translate.instant('users.removed'));
           this.saving.set(false);
         },
         error: (error: unknown) => {
           this.removeError.set(
-            ApiError.message(error, this.translate.instant('users.removeError')),
+            this.notifyError(
+              error,
+              ApiError.message(error, this.translate.instant('users.removeError')),
+            ),
           );
           this.saving.set(false);
         },
@@ -135,11 +146,12 @@ export class UsersState {
   }
 
   private userErrorMessage(error: unknown): string {
-    if (error instanceof HttpErrorResponse && error.status === 404) {
-      return this.translate.instant('userForm.notFound');
-    }
+    const message =
+      error instanceof HttpErrorResponse && error.status === 404
+        ? this.translate.instant('userForm.notFound')
+        : ApiError.message(error, this.translate.instant('users.loadUserError'));
 
-    return ApiError.message(error, this.translate.instant('users.loadUserError'));
+    return this.notifyError(error, message);
   }
 
   private save(request: Observable<UserType>, after: (user: UserType) => void): void {
@@ -156,9 +168,20 @@ export class UsersState {
         this.saving.set(false);
       },
       error: (error: unknown) => {
-        this.formError.set(ApiError.message(error, this.translate.instant('users.saveError')));
+        this.formError.set(
+          this.notifyError(
+            error,
+            ApiError.message(error, this.translate.instant('users.saveError')),
+          ),
+        );
         this.saving.set(false);
       },
     });
+  }
+
+  private notifyError(error: unknown, message: string): string {
+    console.error(error);
+    this.toast.error(message);
+    return message;
   }
 }

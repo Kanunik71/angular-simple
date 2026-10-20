@@ -1,21 +1,18 @@
 import { DestroyRef, WritableSignal, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, Subject, catchError, switchMap } from 'rxjs';
 
 import { ListPageType, ListQueryType } from '../../models/common/list.models';
-import { ApiError } from '../../utils/http/api-error';
 import { ComponentState } from './component.state';
 
 export interface ListStateOptionsType<T, F extends object> {
   initialFilters: F;
   pageSize: number;
-  loadErrorKey: string;
+  errorMessage: (error: unknown) => string;
   load: (query: ListQueryType<F>) => Observable<ListPageType<T>>;
 }
 
 export class ListState<T, F extends object> {
-  private readonly translate = inject(TranslateService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly options: ListStateOptionsType<T, F>;
 
@@ -49,8 +46,7 @@ export class ListState<T, F extends object> {
         switchMap((query) =>
           this.loadState
             .load(() => this.options.load(query), {
-              errorMessage: (error) =>
-                ApiError.message(error, this.translate.instant(this.options.loadErrorKey)),
+              errorMessage: this.options.errorMessage,
             })
             .pipe(catchError(() => EMPTY)),
         ),
