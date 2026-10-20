@@ -55,7 +55,7 @@
   }
 
   @if (page.state.refreshing()) {
-    <p class="users-page__status">{{ 'common.loading' | translate }}</p>
+    <ui-spinner [hasOverlay]="true" />
   }
 
   @if (state.pageCount() > 1) {

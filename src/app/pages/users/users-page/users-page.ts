@@ -18,6 +18,7 @@ import { ModalRef } from '../../../ui-core/modal/modal-ref';
 import { ModalService } from '../../../ui-core/modal/modal.service';
 import { UiPagination } from '../../../ui-core/pagination/ui-pagination';
 import { UiSelect } from '../../../ui-core/select/ui-select';
+import { UiSpinner } from '../../../ui-core/spinner/ui-spinner';
 import { UiTable, UiTableColumn, UiTableRow } from '../../../ui-core/table/ui-table';
 import { UiTableSkeleton, UiTableSkeletonRow } from '../../../ui-core/table/ui-table-skeleton';
 import { UserListRow, UserListRowSkeleton } from './user-list-row/user-list-row';
@@ -37,6 +38,7 @@ import { UsersState } from '../users.state';
     UiInput,
     UiPagination,
     UiSelect,
+    UiSpinner,
     UiTable,
     UiTableRow,
     UiTableSkeleton,
