@@ -5,10 +5,10 @@
 
   <div class="users-page__filters" [formGroup]="filterForm">
     <ui-form-field class="users-page__filter" label="users.search">
-      <ui-input autocomplete="off" formControlName="search" />
+      <ui-input autocomplete="off" [formControl]="filterForm.controls.search" />
     </ui-form-field>
     <ui-form-field class="users-page__filter" label="users.columnRole">
-      <ui-select formControlName="role" [options]="roleFilterOptions" />
+      <ui-select [formControl]="filterForm.controls.role" [options]="roleFilterOptions" />
     </ui-form-field>
   </div>
 

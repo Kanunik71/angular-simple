@@ -9,12 +9,6 @@
   width: min(384px, 100%);
 }
 
-.login-page__form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
 .login-page__header {
   display: flex;
   flex-direction: column;

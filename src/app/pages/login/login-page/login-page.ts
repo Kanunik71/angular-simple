@@ -9,12 +9,24 @@ import { FormValidators } from '../../../utils/forms/form.validators';
 import { UiAlert } from '../../../ui-core/alert/ui-alert';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiCard } from '../../../ui-core/card/ui-card';
+import { UiForm } from '../../../ui-core/form/ui-form';
+import { UiFormActions } from '../../../ui-core/form/ui-form-actions';
 import { UiFormField } from '../../../ui-core/form-field/ui-form-field';
 import { UiInput } from '../../../ui-core/input/ui-input';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule, TranslatePipe, UiAlert, UiButton, UiCard, UiFormField, UiInput],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    UiAlert,
+    UiButton,
+    UiCard,
+    UiForm,
+    UiFormActions,
+    UiFormField,
+    UiInput,
+  ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })

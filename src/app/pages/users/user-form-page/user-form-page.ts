@@ -11,6 +11,7 @@ import { PageHeader } from '../../../layout/page-header/page-header';
 import { UiAlert } from '../../../ui-core/alert/ui-alert';
 import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiCard } from '../../../ui-core/card/ui-card';
+import { UiFormActions } from '../../../ui-core/form/ui-form-actions';
 import { UiSkeleton } from '../../../ui-core/skeleton/ui-skeleton';
 import { UserForm } from '../../../entities/user/user-form/user-form';
 import { UserFormPageState } from './user-form-page.state';
@@ -25,6 +26,7 @@ import { UsersState } from '../users.state';
     UiAlert,
     UiButton,
     UiCard,
+    UiFormActions,
     UiSkeleton,
     UserForm,
   ],

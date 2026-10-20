@@ -4,12 +4,6 @@
   gap: var(--space-md);
 }
 
-.user-form-page__skeleton-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-}
-
 .user-form-page__missing {
   display: flex;
   flex-direction: column;

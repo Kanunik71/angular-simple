@@ -7,15 +7,26 @@ import { ROLE_OPTIONS } from '../../../models/user/user-role.models';
 import { FormValidators } from '../../../utils/forms/form.validators';
 import { UiAlert } from '../../../ui-core/alert/ui-alert';
 import { UiButton } from '../../../ui-core/button/ui-button';
+import { UiForm } from '../../../ui-core/form/ui-form';
+import { UiFormActions } from '../../../ui-core/form/ui-form-actions';
 import { UiFormField } from '../../../ui-core/form-field/ui-form-field';
 import { UiInput } from '../../../ui-core/input/ui-input';
 import { UiSelect } from '../../../ui-core/select/ui-select';
 
 @Component({
   selector: 'app-user-form',
-  imports: [ReactiveFormsModule, TranslatePipe, UiAlert, UiButton, UiFormField, UiInput, UiSelect],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    UiAlert,
+    UiButton,
+    UiForm,
+    UiFormActions,
+    UiFormField,
+    UiInput,
+    UiSelect,
+  ],
   templateUrl: './user-form.html',
-  styleUrl: './user-form.scss',
 })
 export class UserForm {
   readonly user = input<UserType | null>(null);
