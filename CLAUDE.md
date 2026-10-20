@@ -99,11 +99,11 @@ core      ->  инфраструктура: api, http, auth, router
 
 Слой моделей — `src/app/models`, подпапка на сущность, файл на группу типов. У всех файлов суффикс `.models.ts` — без исключений, включая не только типы.
 
-- `models/user/` — `user.models.ts` (`UserType`, `UserDraftType`, `UserRoleEnum`), `user-response.models.ts` (`UserResponseType`), `user-role.models.ts` (`UserRoleOptionType`, `ROLE_OPTIONS`, `roleLabel`)
-- `models/auth/` — `auth.models.ts`: `LoginRequestType`, `SessionType`, `JwtPayloadType`; `auth-response.models.ts`: `LoginResponseType`
-- `models/common/` — `common.models.ts`: `ApiErrorBodyType`, общий контракт ошибки
+- `models/user/` — `user.models.ts` (`UserModel`, `UserDraftModel`, `UserRoleEnum`), `user-response.models.ts` (`UserResponseModel`), `user-role.models.ts` (`UserRoleOptionModel`, `ROLE_OPTIONS`, `roleLabel`)
+- `models/auth/` — `auth.models.ts`: `LoginRequestModel`, `SessionModel`, `JwtPayloadModel`; `auth-response.models.ts`: `LoginResponseModel`
+- `models/common/` — `common.models.ts`: `ApiErrorBodyModel`, общий контракт ошибки
 
-Три независимых правила: интерфейс заканчивается на `Type`, union из строковых литералов — на `Enum`, файл — на `models.ts`. `UserType` и `UserDraftType` живут в одном `user.models.ts`, а `UserRoleEnum` отличается суффиксом, потому что это не интерфейс, а перечисление. Сейчас `Enum` один на весь слой — `UserRoleEnum`.
+Суффикс отражает вид объявления: `interface` — `Model`, `enum` и enum-подобный union — `Enum`, остальные `type` — `Type`; файл — `models.ts`. `UserModel` и `UserDraftModel` живут в одном `user.models.ts`, а `UserRoleEnum` отличается суффиксом, потому что это не интерфейс, а перечисление. Сейчас `Enum` один на весь слой — `UserRoleEnum`.
 
 Правило действует только в `models/`. Контракты API (`AuthApiContract`, `UsersApiContract`) и описания контролов (`UiSelectOption`) так не переименовываются: это не модели.
 
@@ -111,18 +111,18 @@ core      ->  инфраструктура: api, http, auth, router
 
 Типы делятся на два слоя, и разница видна по имени файла.
 
-- `<entity>-response.models.ts` — то, что приходит с сервера. Поля там ровно те, что в ответе, и типы ослаблены: `UserResponseType.role` это `string`, а не `UserRoleEnum`. Сервер не гарантирует нам enum.
-- `<entity>.models.ts` — домен. `UserType extends UserResponseType` сужает `role` до `UserRoleEnum` и добавляет то, что считает маппер: `initials`, `isAdmin`.
+- `<entity>-response.models.ts` — то, что приходит с сервера. Поля там ровно те, что в ответе, и типы ослаблены: `UserResponseModel.role` это `string`, а не `UserRoleEnum`. Сервер не гарантирует нам enum.
+- `<entity>.models.ts` — домен. `UserModel extends UserResponseModel` сужает `role` до `UserRoleEnum` и добавляет то, что считает маппер: `initials`, `isAdmin`.
 
-Наследование ставим, когда это тот же объект с большей детализацией. Если сущности разные, даже при совпадении полей, наследования нет — связь выражает маппер. `SessionType` не наследует `LoginResponseType`: ответ логина и сессия приложения — разные сущности, они просто похожи.
+Наследование ставим, когда это тот же объект с большей детализацией. Если сущности разные, даже при совпадении полей, наследования нет — связь выражает маппер. `SessionModel` не наследует `LoginResponseModel`: ответ логина и сессия приложения — разные сущности, они просто похожи.
 
-Запросы пока ходят по доменным типам: `UsersApi.create(body: UserDraftType)`. Симметричного `UserCreateRequestType` нет, потому что форма и сервер сейчас совпадают и маппинг был бы тождественным. Заводить DTO для запроса, когда сервер начнёт принимать другую форму.
+Запросы пока ходят по доменным типам: `UsersApi.create(body: UserDraftModel)`. Симметричного `UserCreateRequestModel` нет, потому что форма и сервер сейчас совпадают и маппинг был бы тождественным. Заводить DTO для запроса, когда сервер начнёт принимать другую форму.
 
 В `models/<entity>/` лежит всё, что описывает значения сущности: типы, enum-подобные union-типы, списки значений для селектов и их подписи. Списки значений и их подписи — часть модели, а не утилита страницы: `ROLE_OPTIONS` и `roleLabel` лежат в `models/user/`, а не в `pages/users/`.
 
 Подписи в модели хранятся ключами перевода, а не готовым текстом: `ROLE_OPTIONS[].label` — это `roles.admin`, а `roleLabel(role)` возвращает ключ. Модель не знает про `TranslateService` — переводом занимается шаблон. Иначе модель зависела бы от i18n. По той же причине в модели нет готовых подписей: даже те, что считает маппер, не тянут текст, только значения вроде `initials` и `isAdmin`.
 
-Модель не знает про `ui-core`. Тип элемента списка описываем сами (`UserRoleOptionType`), а не импортируем `UiSelectOption`: структурная совместимость позволяет передать его в селект без обратной зависимости.
+Модель не знает про `ui-core`. Тип элемента списка описываем сами (`UserRoleOptionModel`), а не импортируем `UiSelectOption`: структурная совместимость позволяет передать его в селект без обратной зависимости.
 
 Barrel-файлов нет: импортируем нужный файл напрямую. Одна сущность тянет другую только явным импортом, например `models/auth/auth.models.ts` берёт `UserRoleEnum` из `models/user/user.models.ts`.
 
@@ -267,6 +267,6 @@ Backdrop модалки — единственное глобальное пра
 3. Провайдить state на маршруте, а не в `root`.
 4. Ходить в бекенд через отдельный API-класс и `HttpClient`. Доступ приложения к API — через `src/app/services/<entity>/<entity>.service.ts`, который маппит ответы в доменные модели.
 5. Новый ответ мока добавить в `*.api.mock.ts` рядом с его API-классом и в карту маршрутов `MockBackend`.
-6. Повторяемые контролы класть в `ui-core` в подходящую группу: `common`, `form`, `layout`, `modal`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Type`, перечисление с `Enum`, файл с `.models.ts`.
+6. Повторяемые контролы класть в `ui-core` в подходящую группу: `common`, `form`, `layout`, `modal`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Model`, перечисление с `Enum`, остальные `type` с `Type`, файл с `.models.ts`.
 7. Стили страницы писать по БЭМ и на токенах из `variables.scss`. Новый сырой цвет — только в `palette.scss`. Размеры в `px`, без `rem` и `em`.
 8. Все пользовательские строки брать из словаря: в шаблоне `| translate`, в TypeScript `translate.instant()`. Новый ключ добавлять в `i18n/ru.ts`.

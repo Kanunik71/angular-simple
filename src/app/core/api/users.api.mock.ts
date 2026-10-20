@@ -3,10 +3,10 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { InMemoryDb } from '../http/in-memory-db';
-import { ListPageType, ListQueryType } from '../../models/common/list.models';
-import { UserDraftType, UserRoleEnum } from '../../models/user/user.models';
-import { UserFilterType } from '../../models/user/user-filter.models';
-import { UserResponseType } from '../../models/user/user-response.models';
+import { ListPageModel, ListQueryModel } from '../../models/common/list.models';
+import { UserDraftModel, UserRoleEnum } from '../../models/user/user.models';
+import { UserFilterModel } from '../../models/user/user-filter.models';
+import { UserResponseModel } from '../../models/user/user-response.models';
 import { Mock } from '../../utils/mock/mock';
 import { UsersApiContract } from './users.api';
 
@@ -17,7 +17,7 @@ const DEFAULT_PAGE_SIZE = 10;
 export class UsersApiMock implements UsersApiContract {
   private readonly db = inject(InMemoryDb);
 
-  list(query: ListQueryType<UserFilterType>): Observable<ListPageType<UserResponseType>> {
+  list(query: ListQueryModel<UserFilterModel>): Observable<ListPageModel<UserResponseModel>> {
     const search = query.filters.search.trim().toLowerCase();
     const role = query.filters.role;
     const filtered = this.db.users.filter((user) => {
@@ -37,7 +37,7 @@ export class UsersApiMock implements UsersApiContract {
     return of({ items, total: filtered.length });
   }
 
-  listFromParams(params: HttpParams): Observable<ListPageType<UserResponseType>> {
+  listFromParams(params: HttpParams): Observable<ListPageModel<UserResponseModel>> {
     return this.list({
       page: readPositiveNumber(params, 'page', 1),
       pageSize: readPositiveNumber(params, 'pageSize', DEFAULT_PAGE_SIZE),
@@ -48,12 +48,12 @@ export class UsersApiMock implements UsersApiContract {
     });
   }
 
-  get(id: string): Observable<UserResponseType> {
+  get(id: string): Observable<UserResponseModel> {
     const user = this.db.users.find((item) => item.id === id);
     return user ? of({ ...user }) : Mock.fail(404, 'Пользователь не найден');
   }
 
-  create(body: UserDraftType): Observable<UserResponseType> {
+  create(body: UserDraftModel): Observable<UserResponseModel> {
     const draft = readDraft(body);
     if (typeof draft === 'string') {
       return Mock.fail(400, draft);
@@ -63,12 +63,12 @@ export class UsersApiMock implements UsersApiContract {
       return Mock.fail(400, 'Пользователь с таким email уже существует');
     }
 
-    const user: UserResponseType = { id: crypto.randomUUID(), ...draft };
+    const user: UserResponseModel = { id: crypto.randomUUID(), ...draft };
     this.db.users.unshift(user);
     return of({ ...user });
   }
 
-  update(id: string, body: UserDraftType): Observable<UserResponseType> {
+  update(id: string, body: UserDraftModel): Observable<UserResponseModel> {
     const current = this.db.users.find((user) => user.id === id);
     if (!current) {
       return Mock.fail(404, 'Пользователь не найден');
@@ -113,7 +113,7 @@ function readRoleFilter(value: string | null): UserRoleEnum | '' {
   return value !== null && isRole(value) ? value : '';
 }
 
-function readDraft(body: unknown): UserDraftType | string {
+function readDraft(body: unknown): UserDraftModel | string {
   const source = Mock.record(body);
   const fullName = Mock.text(source, 'fullName');
   const email = Mock.text(source, 'email').toLowerCase();

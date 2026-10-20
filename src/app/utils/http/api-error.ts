@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { ApiErrorBodyType } from '../../models/common/common.models';
+import { ApiErrorBodyModel } from '../../models/common/common.models';
 
 export class ApiError {
   static message(error: unknown, fallback: string): string {
@@ -17,7 +17,7 @@ export class ApiError {
   }
 }
 
-function isApiErrorBody(value: unknown): value is ApiErrorBodyType {
+function isApiErrorBody(value: unknown): value is ApiErrorBodyModel {
   if (typeof value !== 'object' || value === null || !('message' in value)) {
     return false;
   }

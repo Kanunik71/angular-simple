@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { UserResponseType } from '../../models/user/user-response.models';
+import { UserResponseModel } from '../../models/user/user-response.models';
 
 @Injectable({ providedIn: 'root' })
 export class InMemoryDb {
-  readonly users: UserResponseType[] = [
+  readonly users: UserResponseModel[] = [
     {
       id: 'u-1',
       fullName: 'Анна Смирнова',

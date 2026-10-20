@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { LoginRequestType } from '../../models/auth/auth.models';
-import { LoginResponseType } from '../../models/auth/auth-response.models';
+import { LoginRequestModel } from '../../models/auth/auth.models';
+import { LoginResponseModel } from '../../models/auth/auth-response.models';
 import { AccessToken } from '../../utils/jwt/access-token';
 import { Mock } from '../../utils/mock/mock';
 import { AuthApiContract } from './auth.api';
@@ -13,7 +13,7 @@ const DEMO_ROLE = 'admin';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApiMock implements AuthApiContract {
-  login(body: LoginRequestType): Observable<LoginResponseType> {
+  login(body: LoginRequestModel): Observable<LoginResponseModel> {
     const source = Mock.record(body);
     const username = Mock.text(source, 'username');
     const password = Mock.text(source, 'password');

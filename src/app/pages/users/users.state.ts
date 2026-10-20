@@ -4,8 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject, catchError, of, switchMap } from 'rxjs';
 
-import { UserDraftType, UserType } from '../../models/user/user.models';
-import { UserFilterType } from '../../models/user/user-filter.models';
+import { UserDraftModel, UserModel } from '../../models/user/user.models';
+import { UserFilterModel } from '../../models/user/user-filter.models';
 import { ComponentState } from '../../core/state/component.state';
 import { ListState } from '../../core/state/list.state';
 import { UserService } from '../../services/user/user.service';
@@ -19,7 +19,7 @@ export class UsersState {
   private readonly translate = inject(TranslateService);
   private readonly toast = inject(ToastService);
 
-  private readonly list = new ListState<UserType, UserFilterType>({
+  private readonly list = new ListState<UserModel, UserFilterModel>({
     initialFilters: { search: '', role: '' },
     pageSize: 10,
     errorMessage: (error) =>
@@ -41,7 +41,7 @@ export class UsersState {
   readonly removeError = signal<string | null>(null);
   readonly saved = signal(0);
 
-  readonly selectedUser = signal<UserType | null>(null);
+  readonly selectedUser = signal<UserModel | null>(null);
   readonly selectedId = signal<string | null>(null);
   readonly selected = new ComponentState();
 
@@ -77,7 +77,7 @@ export class UsersState {
     this.list.setPage(page);
   }
 
-  setFilters(filters: UserFilterType): void {
+  setFilters(filters: UserFilterModel): void {
     this.list.setFilters(filters);
   }
 
@@ -95,14 +95,14 @@ export class UsersState {
     this.selectedRequests.next(null);
   }
 
-  create(draft: UserDraftType): void {
+  create(draft: UserDraftModel): void {
     this.save(this.service.create(draft), () => {
       this.list.loadFirst();
       this.toast.success(this.translate.instant('users.created'));
     });
   }
 
-  update(id: string, draft: UserDraftType): void {
+  update(id: string, draft: UserDraftModel): void {
     this.save(this.service.update(id, draft), (user) => {
       this.selectedUser.set(user);
       this.list.reload();
@@ -154,7 +154,7 @@ export class UsersState {
     return this.notifyError(error, message);
   }
 
-  private save(request: Observable<UserType>, after: (user: UserType) => void): void {
+  private save(request: Observable<UserModel>, after: (user: UserModel) => void): void {
     if (this.saving()) {
       return;
     }

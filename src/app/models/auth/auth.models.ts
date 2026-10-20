@@ -1,17 +1,17 @@
 import { UserRoleEnum } from '../user/user.models';
 
-export interface LoginRequestType {
+export interface LoginRequestModel {
   username: string;
   password: string;
 }
 
-export interface SessionType {
+export interface SessionModel {
   username: string;
   role: UserRoleEnum;
   token: string;
 }
 
-export interface JwtPayloadType {
+export interface JwtPayloadModel {
   sub: string;
   role: UserRoleEnum;
   exp: number;

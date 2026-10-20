@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
-import { UserRoleEnum, UserType } from '../../../models/user/user.models';
+import { UserRoleEnum, UserModel } from '../../../models/user/user.models';
 import { USER_ROLE_FILTER_OPTIONS } from '../../../models/user/user-role.models';
 import { allRoutes } from '../../../core/router/all-routes';
 import { RouterService } from '../../../core/router/router.service';
@@ -69,7 +69,7 @@ export class UsersPage {
     { key: 'role', label: 'users.columnRole' },
     { key: 'actions', label: 'users.columnActions', align: 'right' },
   ];
-  protected readonly rowKey = (user: UserType): string => user.id;
+  protected readonly rowKey = (user: UserModel): string => user.id;
   protected readonly filterForm = new FormGroup({
     search: new FormControl(this.state.filters().search, { nonNullable: true }),
     role: new FormControl<UserRoleEnum | ''>(this.state.filters().role, {
@@ -98,11 +98,11 @@ export class UsersPage {
     void this.router.go(allRoutes.users.new());
   }
 
-  protected openEdit(user: UserType): void {
+  protected openEdit(user: UserModel): void {
     void this.router.go(allRoutes.users.edit(user.id));
   }
 
-  protected requestDelete(user: UserType): void {
+  protected requestDelete(user: UserModel): void {
     this.deleteRef?.close(null);
     const ref = this.modal.confirm({
       title: 'users.deleteTitle',

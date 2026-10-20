@@ -1,3 +1,3 @@
-export interface ApiErrorBodyType {
+export interface ApiErrorBodyModel {
   message: string;
 }

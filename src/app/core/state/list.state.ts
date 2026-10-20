@@ -2,14 +2,14 @@ import { DestroyRef, WritableSignal, computed, inject, signal } from '@angular/c
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Observable, Subject, catchError, switchMap } from 'rxjs';
 
-import { ListPageType, ListQueryType } from '../../models/common/list.models';
+import { ListPageModel, ListQueryModel } from '../../models/common/list.models';
 import { ComponentState } from './component.state';
 
 export interface ListStateOptionsType<T, F extends object> {
   initialFilters: F;
   pageSize: number;
   errorMessage: (error: unknown) => string;
-  load: (query: ListQueryType<F>) => Observable<ListPageType<T>>;
+  load: (query: ListQueryModel<F>) => Observable<ListPageModel<T>>;
 }
 
 export class ListState<T, F extends object> {
@@ -21,7 +21,7 @@ export class ListState<T, F extends object> {
   private readonly pageState = signal(1);
   private readonly pageSizeState: WritableSignal<number>;
   private readonly filtersState: WritableSignal<F>;
-  private readonly requests = new Subject<ListQueryType<F>>();
+  private readonly requests = new Subject<ListQueryModel<F>>();
 
   readonly loadState = new ComponentState();
   readonly items = this.itemsState.asReadonly();

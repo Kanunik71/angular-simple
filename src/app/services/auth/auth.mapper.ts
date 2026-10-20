@@ -1,9 +1,9 @@
-import { SessionType } from '../../models/auth/auth.models';
-import { LoginResponseType } from '../../models/auth/auth-response.models';
+import { SessionModel } from '../../models/auth/auth.models';
+import { LoginResponseModel } from '../../models/auth/auth-response.models';
 import { UserRoleEnum } from '../../models/user/user.models';
 
 export class AuthMapper {
-  static toSession(response: LoginResponseType): SessionType {
+  static toSession(response: LoginResponseModel): SessionModel {
     return {
       username: response.username,
       role: AuthMapper.toRole(response.role),

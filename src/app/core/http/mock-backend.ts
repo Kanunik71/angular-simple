@@ -3,8 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, delay, map } from 'rxjs';
 
 import { AuthApiMock } from '../api/auth.api.mock';
-import { LoginRequestType } from '../../models/auth/auth.models';
-import { UserDraftType } from '../../models/user/user.models';
+import { LoginRequestModel } from '../../models/auth/auth.models';
+import { UserDraftModel } from '../../models/user/user.models';
 import { UsersApiMock } from '../api/users.api.mock';
 import { AccessToken } from '../../utils/jwt/access-token';
 import { Mock } from '../../utils/mock/mock';
@@ -33,7 +33,7 @@ export class MockBackend implements HttpBackend {
     }
 
     if (req.method === 'POST' && path === LOGIN_PATH) {
-      return this.auth.login(req.body as LoginRequestType);
+      return this.auth.login(req.body as LoginRequestModel);
     }
 
     if (!isAuthorized(req)) {
@@ -45,7 +45,7 @@ export class MockBackend implements HttpBackend {
     }
 
     if (req.method === 'POST' && path === USERS_PATH) {
-      return this.users.create(req.body as UserDraftType);
+      return this.users.create(req.body as UserDraftModel);
     }
 
     const userId = path.match(USER_PATH)?.[1];
@@ -54,7 +54,7 @@ export class MockBackend implements HttpBackend {
     }
 
     if (userId && req.method === 'PUT') {
-      return this.users.update(userId, req.body as UserDraftType);
+      return this.users.update(userId, req.body as UserDraftModel);
     }
 
     if (userId && req.method === 'DELETE') {

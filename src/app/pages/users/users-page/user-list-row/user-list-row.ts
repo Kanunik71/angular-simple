@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { UserType } from '../../../../models/user/user.models';
+import { UserModel } from '../../../../models/user/user.models';
 import { roleLabel } from '../../../../models/user/user-role.models';
 import { UiButton } from '../../../../ui-core/common/button/ui-button';
 import { UiSkeleton } from '../../../../ui-core/common/skeleton/ui-skeleton';
@@ -14,7 +14,7 @@ import { UiTableCell } from '../../../../ui-core/layout/table/ui-table-cell';
   styleUrl: './user-list-row.scss',
 })
 export class UserListRow {
-  readonly user = input.required<UserType>();
+  readonly user = input.required<UserModel>();
   readonly edit = output<void>();
   readonly remove = output<void>();
 

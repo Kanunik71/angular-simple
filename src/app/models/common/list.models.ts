@@ -1,10 +1,10 @@
-export interface ListQueryType<F> {
+export interface ListQueryModel<F> {
   page: number;
   pageSize: number;
   filters: F;
 }
 
-export interface ListPageType<T> {
+export interface ListPageModel<T> {
   items: T[];
   total: number;
 }

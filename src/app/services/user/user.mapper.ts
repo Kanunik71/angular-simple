@@ -1,8 +1,8 @@
-import { UserRoleEnum, UserType } from '../../models/user/user.models';
-import { UserResponseType } from '../../models/user/user-response.models';
+import { UserRoleEnum, UserModel } from '../../models/user/user.models';
+import { UserResponseModel } from '../../models/user/user-response.models';
 
 export class UserMapper {
-  static toUser(response: UserResponseType): UserType {
+  static toUser(response: UserResponseModel): UserModel {
     const role = UserMapper.toRole(response.role);
     return {
       id: response.id,

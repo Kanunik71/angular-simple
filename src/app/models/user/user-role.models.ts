@@ -1,21 +1,21 @@
 import { UserRoleEnum } from './user.models';
 
-export interface UserRoleOptionType {
+export interface UserRoleOptionModel {
   value: UserRoleEnum;
   label: string;
 }
 
-export interface UserRoleFilterOptionType {
+export interface UserRoleFilterOptionModel {
   value: UserRoleEnum | '';
   label: string;
 }
 
-export const ROLE_OPTIONS: UserRoleOptionType[] = [
+export const ROLE_OPTIONS: UserRoleOptionModel[] = [
   { value: 'user', label: 'roles.user' },
   { value: 'admin', label: 'roles.admin' },
 ];
 
-export const USER_ROLE_FILTER_OPTIONS: UserRoleFilterOptionType[] = [
+export const USER_ROLE_FILTER_OPTIONS: UserRoleFilterOptionModel[] = [
   { value: '', label: 'users.allRoles' },
   ...ROLE_OPTIONS,
 ];

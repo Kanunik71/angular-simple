@@ -1,14 +1,14 @@
-import { UserResponseType } from './user-response.models';
+import { UserResponseModel } from './user-response.models';
 
 export type UserRoleEnum = 'admin' | 'user';
 
-export interface UserType extends UserResponseType {
+export interface UserModel extends UserResponseModel {
   role: UserRoleEnum;
   initials: string;
   isAdmin: boolean;
 }
 
-export interface UserDraftType {
+export interface UserDraftModel {
   fullName: string;
   email: string;
   role: UserRoleEnum;

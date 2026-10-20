@@ -2,7 +2,7 @@ import { Component, effect, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { UserType, UserDraftType, UserRoleEnum } from '../../../models/user/user.models';
+import { UserModel, UserDraftModel, UserRoleEnum } from '../../../models/user/user.models';
 import { ROLE_OPTIONS } from '../../../models/user/user-role.models';
 import { FormValidators } from '../../../utils/forms/form.validators';
 import { UiAlert } from '../../../ui-core/common/alert/ui-alert';
@@ -29,10 +29,10 @@ import { UiSelect } from '../../../ui-core/form/select/ui-select';
   templateUrl: './user-create-update-form.html',
 })
 export class UserCreateUpdateForm {
-  readonly user = input<UserType | null>(null);
+  readonly user = input<UserModel | null>(null);
   readonly saving = input(false);
   readonly serverError = input<string | null>(null);
-  readonly submitted = output<UserDraftType>();
+  readonly submitted = output<UserDraftModel>();
   readonly cancelled = output<void>();
 
   protected readonly roles = ROLE_OPTIONS;

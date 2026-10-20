@@ -1,11 +1,11 @@
-import { JwtPayloadType } from '../../models/auth/auth.models';
+import { JwtPayloadModel } from '../../models/auth/auth.models';
 import { Base64Url } from '../base64/base64-url';
 
 const SECRET = 'exam-demo-secret';
 const TOKEN_TTL_SECONDS = 8 * 60 * 60;
 
 export class AccessToken {
-  static create(payload: Omit<JwtPayloadType, 'exp'>): string {
+  static create(payload: Omit<JwtPayloadModel, 'exp'>): string {
     const header = Base64Url.encode(JSON.stringify({ alg: 'demo', typ: 'JWT' }));
     const body = Base64Url.encode(
       JSON.stringify({
@@ -16,7 +16,7 @@ export class AccessToken {
     return `${header}.${body}.${sign(`${header}.${body}`)}`;
   }
 
-  static verify(token: string): JwtPayloadType | null {
+  static verify(token: string): JwtPayloadModel | null {
     const parts = token.split('.');
     if (parts.length !== 3 || sign(`${parts[0]}.${parts[1]}`) !== parts[2]) {
       return null;
@@ -44,12 +44,12 @@ function sign(value: string): string {
   return (hash >>> 0).toString(16).padStart(8, '0');
 }
 
-function isPayload(value: unknown): value is JwtPayloadType {
+function isPayload(value: unknown): value is JwtPayloadModel {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
 
-  const payload = value as Partial<JwtPayloadType>;
+  const payload = value as Partial<JwtPayloadModel>;
   return (
     typeof payload.sub === 'string' &&
     (payload.role === 'admin' || payload.role === 'user') &&

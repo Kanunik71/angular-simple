@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import { ListPageType, ListQueryType } from '../../models/common/list.models';
-import { UserDraftType, UserType } from '../../models/user/user.models';
-import { UserFilterType } from '../../models/user/user-filter.models';
+import { ListPageModel, ListQueryModel } from '../../models/common/list.models';
+import { UserDraftModel, UserModel } from '../../models/user/user.models';
+import { UserFilterModel } from '../../models/user/user-filter.models';
 import { UsersApi } from '../../core/api/users.api';
 import { UserMapper } from './user.mapper';
 
@@ -11,7 +11,7 @@ import { UserMapper } from './user.mapper';
 export class UserService {
   private readonly api = inject(UsersApi);
 
-  list(query: ListQueryType<UserFilterType>): Observable<ListPageType<UserType>> {
+  list(query: ListQueryModel<UserFilterModel>): Observable<ListPageModel<UserModel>> {
     return this.api.list(query).pipe(
       map((page) => ({
         items: page.items.map((row) => UserMapper.toUser(row)),
@@ -20,15 +20,15 @@ export class UserService {
     );
   }
 
-  get(id: string): Observable<UserType> {
+  get(id: string): Observable<UserModel> {
     return this.api.get(id).pipe(map((user) => UserMapper.toUser(user)));
   }
 
-  create(draft: UserDraftType): Observable<UserType> {
+  create(draft: UserDraftModel): Observable<UserModel> {
     return this.api.create(draft).pipe(map((user) => UserMapper.toUser(user)));
   }
 
-  update(id: string, draft: UserDraftType): Observable<UserType> {
+  update(id: string, draft: UserDraftModel): Observable<UserModel> {
     return this.api.update(id, draft).pipe(map((user) => UserMapper.toUser(user)));
   }
 

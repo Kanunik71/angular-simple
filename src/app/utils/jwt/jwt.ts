@@ -1,9 +1,9 @@
-import { JwtPayloadType } from '../../models/auth/auth.models';
+import { JwtPayloadModel } from '../../models/auth/auth.models';
 import { UserRoleEnum } from '../../models/user/user.models';
 import { Base64Url } from '../base64/base64-url';
 
 export class Jwt {
-  static readPayload(token: string): JwtPayloadType | null {
+  static readPayload(token: string): JwtPayloadModel | null {
     const parts = token.split('.');
     if (parts.length !== 3) {
       return null;
@@ -21,12 +21,12 @@ export class Jwt {
   }
 }
 
-function isJwtPayload(value: unknown): value is JwtPayloadType {
+function isJwtPayload(value: unknown): value is JwtPayloadModel {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
 
-  const payload = value as Partial<JwtPayloadType>;
+  const payload = value as Partial<JwtPayloadModel>;
   return (
     typeof payload.sub === 'string' &&
     payload.sub.length > 0 &&

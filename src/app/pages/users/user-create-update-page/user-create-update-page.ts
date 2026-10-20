@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { UserDraftType } from '../../../models/user/user.models';
+import { UserDraftModel } from '../../../models/user/user.models';
 import { allRoutes } from '../../../core/router/all-routes';
 import { RouterService } from '../../../core/router/router.service';
 import { PageContainer } from '../../../layout/page-container/page-container';
@@ -94,7 +94,7 @@ export class UserCreateUpdatePage {
     });
   }
 
-  protected save(draft: UserDraftType): void {
+  protected save(draft: UserDraftModel): void {
     const id = this.userId();
     if (id) {
       this.state.update(id, draft);

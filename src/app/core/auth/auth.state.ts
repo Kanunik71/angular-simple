@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 import { AuthService } from '../../services/auth/auth.service';
-import { SessionType } from '../../models/auth/auth.models';
+import { SessionModel } from '../../models/auth/auth.models';
 import { ApiError } from '../../utils/http/api-error';
 import { Jwt } from '../../utils/jwt/jwt';
 import { TokenStorage } from './token.storage';
@@ -14,7 +14,7 @@ export class AuthState {
   private readonly tokens = inject(TokenStorage);
   private readonly translate = inject(TranslateService);
 
-  readonly session = signal<SessionType | null>(this.restore());
+  readonly session = signal<SessionModel | null>(this.restore());
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly isAuthenticated = computed(() => this.session() !== null);
@@ -50,7 +50,7 @@ export class AuthState {
     this.error.set(null);
   }
 
-  private restore(): SessionType | null {
+  private restore(): SessionModel | null {
     const token = this.tokens.read();
     if (!token) {
       return null;
