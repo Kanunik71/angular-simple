@@ -5,7 +5,6 @@ export const APP_LANG = 'ru';
 export const RU: TranslationObject = {
   app: {
     title: 'Справочник пользователей',
-    nav: 'Основная навигация',
     navUsers: 'Пользователи',
     session: 'Вы вошли как {{username}}',
     logout: 'Выйти',
@@ -15,7 +14,6 @@ export const RU: TranslationObject = {
     cancel: 'Отмена',
     confirm: 'Подтвердить',
     backToList: 'К списку',
-    close: 'Закрыть',
     loading: 'Загрузка…',
   },
   roles: {
@@ -23,7 +21,6 @@ export const RU: TranslationObject = {
     admin: 'Администратор',
   },
   pagination: {
-    label: 'Постраничная навигация',
     previous: 'Назад',
     next: 'Вперёд',
     page: 'Страница {{page}} из {{total}}',

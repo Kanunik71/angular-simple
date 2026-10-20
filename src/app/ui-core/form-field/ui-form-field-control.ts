@@ -3,7 +3,6 @@ import { AbstractControl } from '@angular/forms';
 
 export interface UiFormFieldControl {
   readonly fieldId: string;
-  readonly errorId: string;
   readonly control: AbstractControl | null;
 }
 

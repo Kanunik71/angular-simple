@@ -5,8 +5,6 @@
   [value]="value()"
   [disabled]="disabled()"
   [attr.autocomplete]="autocomplete()"
-  [attr.aria-invalid]="invalid ? true : null"
-  [attr.aria-describedby]="invalid ? errorId : null"
   (input)="onInput($event)"
   (blur)="onBlur()"
 />

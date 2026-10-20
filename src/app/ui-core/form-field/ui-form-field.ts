@@ -17,5 +17,4 @@ export class UiFormField {
   private readonly fieldControl = contentChild(UI_FORM_FIELD_CONTROL);
   protected readonly control = computed(() => this.fieldControl()?.control ?? null);
   protected readonly fieldId = computed(() => this.fieldControl()?.fieldId ?? null);
-  protected readonly errorId = computed(() => this.fieldControl()?.errorId ?? null);
 }

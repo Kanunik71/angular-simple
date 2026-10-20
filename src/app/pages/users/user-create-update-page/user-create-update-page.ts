@@ -13,12 +13,12 @@ import { UiButton } from '../../../ui-core/button/ui-button';
 import { UiCard } from '../../../ui-core/card/ui-card';
 import { UiFormActions } from '../../../ui-core/form/ui-form-actions';
 import { UiSkeleton } from '../../../ui-core/skeleton/ui-skeleton';
-import { UserForm } from '../../../entities/user/user-form/user-form';
-import { UserFormPageState } from './user-form-page.state';
+import { UserCreateUpdateForm } from '../../../entities/user/user-create-update-form/user-create-update-form';
+import { UserCreateUpdatePageState } from './user-create-update-page.state';
 import { UsersState } from '../users.state';
 
 @Component({
-  selector: 'app-user-form-page',
+  selector: 'app-user-create-update-page',
   imports: [
     TranslatePipe,
     PageContainer,
@@ -28,17 +28,17 @@ import { UsersState } from '../users.state';
     UiCard,
     UiFormActions,
     UiSkeleton,
-    UserForm,
+    UserCreateUpdateForm,
   ],
-  providers: [UserFormPageState],
-  templateUrl: './user-form-page.html',
-  styleUrl: './user-form-page.scss',
+  providers: [UserCreateUpdatePageState],
+  templateUrl: './user-create-update-page.html',
+  styleUrl: './user-create-update-page.scss',
 })
-export class UserFormPage {
+export class UserCreateUpdatePage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(RouterService);
   protected readonly state = inject(UsersState);
-  protected readonly page = inject(UserFormPageState);
+  protected readonly page = inject(UserCreateUpdatePageState);
 
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,

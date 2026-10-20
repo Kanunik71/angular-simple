@@ -13,7 +13,6 @@ export class UiTableSkeletonRow {
 @Component({
   selector: 'ui-table-skeleton',
   imports: [NgTemplateOutlet, TranslatePipe, UiTableCell],
-  host: { 'aria-busy': 'true' },
   templateUrl: './ui-table-skeleton.html',
   styleUrl: './ui-table.scss',
 })

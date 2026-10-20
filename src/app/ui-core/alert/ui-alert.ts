@@ -6,7 +6,6 @@ import { Component, input } from '@angular/core';
     class: 'ui-alert',
     '[class.ui-alert--error]': 'variant() === "error"',
     '[class.ui-alert--info]': 'variant() === "info"',
-    '[attr.role]': 'variant() === "error" ? "alert" : "status"',
   },
   template: '<ng-content />',
   styleUrl: './ui-alert.scss',

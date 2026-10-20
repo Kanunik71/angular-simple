@@ -2,12 +2,11 @@
   <div class="app-header__inner">
     <a class="app-header__brand" [routerLink]="usersLink">{{ 'app.title' | translate }}</a>
 
-    <nav class="app-header__nav" [attr.aria-label]="'app.nav' | translate">
+    <nav class="app-header__nav">
       <a
         class="app-header__link"
         [routerLink]="usersLink"
         routerLinkActive="app-header__link--active"
-        ariaCurrentWhenActive="page"
       >
         {{ 'app.navUsers' | translate }}
       </a>

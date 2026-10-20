@@ -7,7 +7,6 @@ import { Component, input } from '@angular/core';
     '[class.ui-skeleton--circle]': "variant() === 'circle'",
     '[style.width]': 'width()',
     '[style.height]': 'height()',
-    'aria-hidden': 'true',
   },
   template: '',
   styleUrl: './ui-skeleton.scss',

@@ -2,8 +2,6 @@
   class="ui-field__control"
   [id]="fieldId"
   [disabled]="disabled()"
-  [attr.aria-invalid]="invalid ? true : null"
-  [attr.aria-describedby]="invalid ? errorId : null"
   (change)="onSelect($event)"
   (blur)="onBlur()"
 >

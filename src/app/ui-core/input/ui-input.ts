@@ -34,7 +34,6 @@ export class UiInput implements ControlValueAccessor, OnInit {
   protected readonly value = signal('');
   protected readonly disabled = signal(false);
   readonly fieldId = `ui-input-${nextFieldId++}`;
-  readonly errorId = `${this.fieldId}-error`;
 
   private readonly controlState = signal<AbstractControl | null>(null);
   private readonly injector = inject(Injector);
@@ -45,11 +44,6 @@ export class UiInput implements ControlValueAccessor, OnInit {
 
   get control(): AbstractControl | null {
     return this.controlState();
-  }
-
-  protected get invalid(): boolean {
-    const control = this.control;
-    return control !== null && control.invalid && control.touched;
   }
 
   ngOnInit(): void {

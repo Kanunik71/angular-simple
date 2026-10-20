@@ -4,7 +4,7 @@ import { ComponentState } from '../../../core/state/component.state';
 import { UsersState } from '../users.state';
 
 @Injectable()
-export class UserFormPageState {
+export class UserCreateUpdatePageState {
   private readonly users = inject(UsersState);
 
   readonly state = new ComponentState();

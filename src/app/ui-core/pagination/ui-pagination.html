@@ -1,9 +1,9 @@
-<nav class="ui-pagination" [attr.aria-label]="'pagination.label' | translate">
+<nav class="ui-pagination">
   <button uiButton type="button" variant="secondary" [disabled]="page() <= 1" (click)="previous()">
     {{ 'pagination.previous' | translate }}
   </button>
 
-  <span class="ui-pagination__status" aria-live="polite">
+  <span class="ui-pagination__status">
     {{ 'pagination.page' | translate: { page: page(), total: pageCount() } }}
   </span>
 

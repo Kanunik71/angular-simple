@@ -14,7 +14,7 @@ import { UiInput } from '../../../ui-core/input/ui-input';
 import { UiSelect } from '../../../ui-core/select/ui-select';
 
 @Component({
-  selector: 'app-user-form',
+  selector: 'app-user-create-update-form',
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
@@ -26,9 +26,9 @@ import { UiSelect } from '../../../ui-core/select/ui-select';
     UiInput,
     UiSelect,
   ],
-  templateUrl: './user-form.html',
+  templateUrl: './user-create-update-form.html',
 })
-export class UserForm {
+export class UserCreateUpdateForm {
   readonly user = input<UserType | null>(null);
   readonly saving = input(false);
   readonly serverError = input<string | null>(null);

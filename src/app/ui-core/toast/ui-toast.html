@@ -1,9 +1,2 @@
 <p class="ui-toast__message">{{ message() }}</p>
-<button
-  type="button"
-  class="ui-toast__close"
-  [attr.aria-label]="'common.close' | translate"
-  (click)="closed.emit()"
->
-  ×
-</button>
+<button type="button" class="ui-toast__close" (click)="closed.emit()">×</button>

@@ -11,7 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class UiFormErrors {
   readonly control = input<AbstractControl | null>(null);
   readonly label = input.required<string>();
-  readonly errorId = input<string | null>(null);
 
   private readonly translate = inject(TranslateService);
   protected readonly message = signal<string | null>(null);
