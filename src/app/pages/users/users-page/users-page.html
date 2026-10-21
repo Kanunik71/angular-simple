@@ -3,24 +3,24 @@
     <button uiButton type="button" (click)="openCreate()">{{ 'users.add' | translate }}</button>
   </app-page-header>
 
-  <div class="users-page__filters" [formGroup]="filterForm">
-    <ui-form-field class="users-page__filter" label="users.search">
+  <ui-filters [formGroup]="filterForm">
+    <ui-form-field label="users.search">
       <ui-input autocomplete="off" [formControl]="filterForm.controls.search" />
     </ui-form-field>
-    <ui-form-field class="users-page__filter" label="users.columnRole">
+    <ui-form-field label="users.columnRole">
       <ui-select [formControl]="filterForm.controls.role" [options]="roleFilterOptions" />
     </ui-form-field>
-  </div>
+  </ui-filters>
 
-  @if (page.state.error()) {
-    <ui-alert>{{ page.state.error() }}</ui-alert>
+  @if (state.page.error()) {
+    <ui-alert>{{ state.page.error() }}</ui-alert>
   }
 
   @if (state.removeError()) {
     <ui-alert>{{ state.removeError() }}</ui-alert>
   }
 
-  @if (page.state.initialLoading()) {
+  @if (state.page.initialLoading()) {
     <ui-card [flush]="true">
       <ui-table-skeleton [columns]="columns">
         <ng-template uiTableSkeletonRow>
@@ -28,10 +28,10 @@
         </ng-template>
       </ui-table-skeleton>
     </ui-card>
-  } @else if (page.state.loaded()) {
+  } @else if (state.page.loaded()) {
     <ui-card [flush]="true">
       <ui-table
-        [rows]="state.users()"
+        [rows]="state.list.items()"
         [columns]="columns"
         [rowKey]="rowKey"
         emptyLabel="users.empty"
@@ -48,14 +48,14 @@
     </ui-card>
   }
 
-  @if (page.state.refreshing()) {
+  @if (state.page.refreshing()) {
     <ui-spinner [hasOverlay]="true" />
   }
 
-  @if (state.pageCount() > 1) {
+  @if (state.list.pageCount() > 1) {
     <ui-pagination
-      [page]="state.page()"
-      [pageCount]="state.pageCount()"
+      [page]="state.list.page()"
+      [pageCount]="state.list.pageCount()"
       (pageChange)="state.setPage($event)"
     />
   }

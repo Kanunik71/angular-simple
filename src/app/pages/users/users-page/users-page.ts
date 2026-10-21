@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -13,6 +13,7 @@ import { PageHeader } from '../../../layout/page-header/page-header';
 import { UiAlert } from '../../../ui-core/common/alert/ui-alert';
 import { UiButton } from '../../../ui-core/common/button/ui-button';
 import { UiSpinner } from '../../../ui-core/common/spinner/ui-spinner';
+import { UiFilters } from '../../../ui-core/form/filters/ui-filters';
 import { UiFormField } from '../../../ui-core/form/form-field/ui-form-field';
 import { UiInput } from '../../../ui-core/form/input/ui-input';
 import { UiSelect } from '../../../ui-core/form/select/ui-select';
@@ -27,7 +28,6 @@ import { ModalRef } from '../../../ui-core/modal/modal-ref';
 import { ModalService } from '../../../ui-core/modal/modal.service';
 import { UserListRow, UserListRowSkeleton } from './user-list-row/user-list-row';
 import { UsersPageState } from './users-page.state';
-import { UsersState } from '../users.state';
 
 @Component({
   selector: 'app-users-page',
@@ -39,6 +39,7 @@ import { UsersState } from '../users.state';
     UiAlert,
     UiButton,
     UiCard,
+    UiFilters,
     UiFormField,
     UiInput,
     UiPagination,
@@ -53,14 +54,12 @@ import { UsersState } from '../users.state';
   ],
   providers: [UsersPageState],
   templateUrl: './users-page.html',
-  styleUrl: './users-page.scss',
 })
-export class UsersPage {
+export class UsersPage implements OnInit {
   private readonly router = inject(RouterService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly modal = inject(ModalService);
-  protected readonly state = inject(UsersState);
-  protected readonly page = inject(UsersPageState);
+  protected readonly state = inject(UsersPageState);
 
   protected readonly roleFilterOptions = USER_ROLE_FILTER_OPTIONS;
   protected readonly columns: UiTableColumn[] = [
@@ -71,8 +70,8 @@ export class UsersPage {
   ];
   protected readonly rowKey = (user: UserModel): string => user.id;
   protected readonly filterForm = new FormGroup({
-    search: new FormControl(this.state.filters().search, { nonNullable: true }),
-    role: new FormControl<UserRoleEnum | ''>(this.state.filters().role, {
+    search: new FormControl(this.state.list.filters().search, { nonNullable: true }),
+    role: new FormControl<UserRoleEnum | ''>(this.state.list.filters().role, {
       nonNullable: true,
     }),
   });
@@ -92,6 +91,10 @@ export class UsersPage {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => this.state.setFilters(this.filterForm.getRawValue()));
+  }
+
+  ngOnInit(): void {
+    this.state.init();
   }
 
   protected openCreate(): void {

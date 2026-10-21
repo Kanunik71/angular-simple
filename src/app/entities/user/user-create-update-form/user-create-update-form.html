@@ -1,12 +1,12 @@
-<ui-form [formGroup]="form" (submitted)="submit()">
+<ui-form [formGroup]="form()" (submitted)="submit()">
   <ui-form-field label="userForm.name">
-    <ui-input [formControl]="form.controls.fullName" />
+    <ui-input [formControl]="form().controls.fullName" />
   </ui-form-field>
   <ui-form-field label="userForm.email">
-    <ui-input type="email" autocomplete="off" [formControl]="form.controls.email" />
+    <ui-input type="email" autocomplete="off" [formControl]="form().controls.email" />
   </ui-form-field>
   <ui-form-field label="userForm.role">
-    <ui-select [formControl]="form.controls.role" [options]="roles" />
+    <ui-select [formControl]="form().controls.role" [options]="roles" />
   </ui-form-field>
   @if (serverError()) {
     <ui-alert>{{ serverError() }}</ui-alert>

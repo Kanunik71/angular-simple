@@ -48,7 +48,7 @@ npx prettier --check "src/**/*.{ts,html,scss}"
 
 Форма пользователя — отдельная страница, а не модалка. `/users/new` и `/users/:id/edit` рендерят один компонент `UserCreateUpdatePage` и различаются наличием параметра `id`.
 
-`UsersState` провайдится один раз на группу маршрутов `pages/users`, а не на каждый маршрут по отдельности: список и форма должны видеть одни и те же данные. Иначе форма создаст пользователя в своём экземпляре state, а список покажет старые данные.
+У каждой страницы свой state: `UsersPageState` у списка и `UserCreateUpdatePageState` у формы. Оба провайдятся на компонентах страниц; загрузка запускается из `ngOnInit`. После сохранения форма возвращается на список, и список загружается заново — фильтры и номер страницы при этом сбрасываются.
 
 Неавторизованный переход на любой другой адрес приводит к `/login`. Авторизованный переход на `/login` приводит к `/users`.
 
@@ -146,7 +146,7 @@ Barrel-файлов нет: импортируем нужный файл нап�
 Слой `src/app/entities` — переиспользуемые компоненты, которые знают про сущность, но не про конкретную страницу. Сейчас там один компонент: `entities/user/user-create-update-form/`.
 
 - Не импортирует из `pages`. Иначе «общий» компонент оказывается привязан к секции, ради которой его выносили
-- Не ходит в API и не держит состояние — только `input` и `output`. Состояние и HTTP остаются в `pages/<section>/<section>.state.ts`
+- Не ходит в API и не держит состояние — только `input` и `output`. Состояние и HTTP остаются в `pages/<section>/<page>/<page>.state.ts`
 - Вложенность как в `pages`: `<entity>/<component>/<component>.ts`; в `ui-core` компонент лежит внутри группы
 - **Критерий переезда:** подкомпонент уезжает из своей страницы в `entities`, когда понадобился второй странице. Не заранее
 
@@ -217,23 +217,25 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 
 ## Состояние
 
-Файл `*.state.ts` — класс со `signal` и `computed`. Шаблон читает только signals. Подписка на HTTP остаётся внутри state.
+Файл `*.state.ts` — класс со `signal` и `computed`. Если страница владеет формой, `FormGroup` лежит в state; шаблон читает signals и эту форму. Подписка на HTTP остаётся внутри state.
 
 - `AuthState` — сессия всего приложения, `providedIn: 'root'`
-- `UsersState` — список и сохранение, провайдится на lazy-маршруте `/users`
+- `UsersPageState` — список, фильтры и удаление; `list: ListState`, `page: ComponentState`; провайдится на `UsersPage`, загрузка запускается из `ngOnInit`
+- `UserCreateUpdatePageState` — загрузка и сохранение пользователя; `page: ComponentState`, `form: FormGroup`; провайдится на `UserCreateUpdatePage`, загрузка запускается из `ngOnInit`
 
-У страницы своё UI-состояние: открыт ли диалог удаления, кого удаляем. Вопрос «открыта ли форма» ушёл в маршрут.
+У страницы своё UI-состояние: открыт ли диалог удаления, кого удаляем. Это остаётся в `UsersPage`; форма пользователя живёт в `UserCreateUpdatePageState`.
 
 ## ui-core
 
 Компоненты сгруппированы по назначению:
 
 - `common/` — `ui-alert`, `ui-button`, `ui-skeleton`, `ui-spinner`, `ui-toast`
-- `form/` — `ui-form`, `ui-form-actions`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
+- `form/` — `ui-form`, `ui-form-actions`, `ui-filters`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
 - `layout/` — `ui-card`, `ui-pagination`, `ui-table`
 - `modal/` — `ui-modal`, `ModalService` / `ModalRef`, `ui-confirm-modal`
 
 - `button[uiButton]` — варианты `primary`, `secondary`, `ghost`, `danger`. Нативный `type` и `disabled` остаются на кнопке.
+- `ui-filters` — только раскладка фильтров: grid и `ng-content`. `FormGroup` и сами поля остаются на странице; компонент не знает ни про сущность, ни про состав фильтров.
 - `ui-input` и `ui-select` реализуют `ControlValueAccessor`.
 - В `ui-select` выбранный вариант помечается через `[selected]` на `<option>`, а не через `[value]` на `<select>`: биндинг `value` применяется раньше, чем `@for` создаёт сами `<option>`, и значение терялось бы.
 - `UiSelectOption.label` — это ключ перевода, `ui-select` прогоняет его через `| translate` сам. Вызывающий код подписи не переводит.
@@ -262,9 +264,9 @@ Backdrop модалки — единственное глобальное пра
 
 ## Как добавить страницу
 
-1. Создать `src/app/pages/<name>/` со своим `<name>.routes.ts`, страницей и `<name>.state.ts`. Каждый компонент лежит в своей папке с файлами одного имени: `<name>-page/<name>-page.ts`. Подкомпоненты страницы — так же, в `<component>/<component>.ts`, как в `ui-core`; когда такой подкомпонент понадобится второй странице, он переезжает в `src/app/entities/<entity>/`.
+1. Создать `src/app/pages/<name>/` со своим `<name>.routes.ts` и страницей. Каждый компонент лежит в своей папке с файлами одного имени: `<name>-page/<name>-page.ts`; state страницы — рядом, `<name>-page/<name>-page.state.ts`. Подкомпоненты страницы — так же, в `<component>/<component>.ts`, как в `ui-core`; когда такой подкомпонент понадобится второй странице, он переезжает в `src/app/entities/<entity>/`.
 2. Подключить маршруты через `loadChildren` и закрыть их `authGuard`, если страница не публичная. Сегменты пути берутся из enum, в `app.routes.ts` — `AppRouteEnum`.
-3. Провайдить state на маршруте, а не в `root`.
+3. Провайдить `PageState` на компоненте страницы, а не в `root`, и запускать загрузку из `ngOnInit`.
 4. Ходить в бекенд через отдельный API-класс и `HttpClient`. Доступ приложения к API — через `src/app/services/<entity>/<entity>.service.ts`, который маппит ответы в доменные модели.
 5. Новый ответ мока добавить в `*.api.mock.ts` рядом с его API-классом и в карту маршрутов `MockBackend`.
 6. Повторяемые контролы класть в `ui-core` в подходящую группу: `common`, `form`, `layout`, `modal`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Model`, перечисление с `Enum`, остальные `type` с `Type`, файл с `.models.ts`.

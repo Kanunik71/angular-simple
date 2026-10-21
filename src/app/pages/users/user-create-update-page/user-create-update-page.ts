@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, OnInit, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -15,7 +15,6 @@ import { UiFormActions } from '../../../ui-core/form/ui-form-actions';
 import { UiCard } from '../../../ui-core/layout/card/ui-card';
 import { UserCreateUpdateForm } from '../../../entities/user/user-create-update-form/user-create-update-form';
 import { UserCreateUpdatePageState } from './user-create-update-page.state';
-import { UsersState } from '../users.state';
 
 @Component({
   selector: 'app-user-create-update-page',
@@ -34,11 +33,10 @@ import { UsersState } from '../users.state';
   templateUrl: './user-create-update-page.html',
   styleUrl: './user-create-update-page.scss',
 })
-export class UserCreateUpdatePage {
+export class UserCreateUpdatePage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(RouterService);
-  protected readonly state = inject(UsersState);
-  protected readonly page = inject(UserCreateUpdatePageState);
+  protected readonly state = inject(UserCreateUpdatePageState);
 
   private readonly params = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
@@ -49,41 +47,8 @@ export class UserCreateUpdatePage {
   protected readonly titleKey = computed(() =>
     this.userId() ? 'userForm.editTitle' : 'userForm.createTitle',
   );
-  protected readonly user = computed(() => {
-    const id = this.userId();
-    const user = this.state.selectedUser();
-    return id && user?.id === id ? user : null;
-  });
-  protected readonly pageError = computed(() => {
-    const id = this.userId();
-    if (!id || id !== this.state.selectedId()) {
-      return null;
-    }
-
-    return this.page.state.error();
-  });
-  protected readonly loading = computed(() => {
-    const id = this.userId();
-    if (!id) {
-      return false;
-    }
-
-    return this.user() === null && !this.pageError();
-  });
 
   constructor() {
-    this.state.clearFormError();
-    this.state.clearSelected();
-
-    effect(() => {
-      const id = this.userId();
-      if (id) {
-        this.state.loadUser(id);
-        return;
-      }
-      this.state.clearSelected();
-    });
-
     effect(() => {
       const saves = this.state.saved();
       if (saves === this.seenSaves) {
@@ -94,19 +59,15 @@ export class UserCreateUpdatePage {
     });
   }
 
-  protected save(draft: UserDraftModel): void {
-    const id = this.userId();
-    if (id) {
-      this.state.update(id, draft);
-      return;
-    }
+  ngOnInit(): void {
+    this.state.init(this.userId());
+  }
 
-    this.state.create(draft);
+  protected save(draft: UserDraftModel): void {
+    this.state.save(draft);
   }
 
   protected back(): void {
-    this.state.clearFormError();
-    this.state.clearSelected();
     void this.router.go(allRoutes.users.list());
   }
 }

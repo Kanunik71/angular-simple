@@ -6,7 +6,7 @@
   </app-page-header>
 
   <ui-card>
-    @if (loading()) {
+    @if (state.page.initialLoading()) {
       <div class="user-create-update-page__skeleton">
         <ui-skeleton width="100%" height="40px" />
         <ui-skeleton width="100%" height="40px" />
@@ -16,16 +16,16 @@
           <ui-skeleton width="120px" height="36px" />
         </ui-form-actions>
       </div>
-    } @else if (pageError()) {
+    } @else if (state.page.error()) {
       <div class="user-create-update-page__missing">
-        <ui-alert>{{ pageError() }}</ui-alert>
+        <ui-alert>{{ state.page.error() }}</ui-alert>
         <button uiButton type="button" (click)="back()">
           {{ 'common.backToList' | translate }}
         </button>
       </div>
     } @else {
       <app-user-create-update-form
-        [user]="user()"
+        [form]="state.form"
         [saving]="state.saving()"
         [serverError]="state.formError()"
         (submitted)="save($event)"
