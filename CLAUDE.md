@@ -220,7 +220,7 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 Файл `*.state.ts` — класс со `signal` и `computed`. Если страница владеет формой, `FormGroup` лежит в state; шаблон читает signals и эту форму. Подписка на HTTP остаётся внутри state.
 
 - `AuthState` — сессия всего приложения, `providedIn: 'root'`
-- `UsersPageState` — список, фильтры и удаление; `list: ListState`, `page: ComponentState`; провайдится на `UsersPage`, загрузка запускается из `ngOnInit`
+- `UsersPageState` — список, фильтры и удаление; `list: ListState`, `filterForm: FormGroup`, `page: ComponentState`; провайдится на `UsersPage`, загрузка запускается из `ngOnInit`
 - `UserCreateUpdatePageState` — загрузка и сохранение пользователя; `page: ComponentState`, `form: FormGroup`; провайдится на `UserCreateUpdatePage`, загрузка запускается из `ngOnInit`
 
 У страницы своё UI-состояние: открыт ли диалог удаления, кого удаляем. Это остаётся в `UsersPage`; форма пользователя живёт в `UserCreateUpdatePageState`.

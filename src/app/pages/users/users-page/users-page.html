@@ -3,12 +3,12 @@
     <button uiButton type="button" (click)="openCreate()">{{ 'users.add' | translate }}</button>
   </app-page-header>
 
-  <ui-filters [formGroup]="filterForm">
+  <ui-filters [formGroup]="state.filterForm">
     <ui-form-field label="users.search">
-      <ui-input autocomplete="off" [formControl]="filterForm.controls.search" />
+      <ui-input autocomplete="off" [formControl]="state.filterForm.controls.search" />
     </ui-form-field>
     <ui-form-field label="users.columnRole">
-      <ui-select [formControl]="filterForm.controls.role" [options]="roleFilterOptions" />
+      <ui-select [formControl]="state.filterForm.controls.role" [options]="roleFilterOptions" />
     </ui-form-field>
   </ui-filters>
 

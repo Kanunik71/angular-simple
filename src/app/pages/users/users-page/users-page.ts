@@ -1,10 +1,9 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 
-import { UserRoleEnum, UserModel } from '../../../models/user/user.models';
+import { UserModel } from '../../../models/user/user.models';
 import { USER_ROLE_FILTER_OPTIONS } from '../../../models/user/user-role.models';
 import { allRoutes } from '../../../core/router/all-routes';
 import { RouterService } from '../../../core/router/router.service';
@@ -69,28 +68,11 @@ export class UsersPage implements OnInit {
     { key: 'actions', label: 'users.columnActions', align: 'right' },
   ];
   protected readonly rowKey = (user: UserModel): string => user.id;
-  protected readonly filterForm = new FormGroup({
-    search: new FormControl(this.state.list.filters().search, { nonNullable: true }),
-    role: new FormControl<UserRoleEnum | ''>(this.state.list.filters().role, {
-      nonNullable: true,
-    }),
-  });
 
   private deleteRef: ModalRef<boolean> | null = null;
 
   constructor() {
     this.destroyRef.onDestroy(() => this.deleteRef?.close(null));
-
-    this.filterForm.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(
-          (previous, current) =>
-            previous.search === current.search && previous.role === current.role,
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => this.state.setFilters(this.filterForm.getRawValue()));
   }
 
   ngOnInit(): void {

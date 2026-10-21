@@ -1,9 +1,11 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { UserFilterModel } from '../../../models/user/user-filter.models';
-import { UserModel } from '../../../models/user/user.models';
+import { UserModel, UserRoleEnum } from '../../../models/user/user.models';
 import { ComponentState } from '../../../core/state/component.state';
 import { ListState } from '../../../core/state/list.state';
 import { UserService } from '../../../services/user/user.service';
@@ -25,12 +27,29 @@ export class UsersPageState {
       this.notifyError(error, ApiError.message(error, this.translate.instant('users.loadError'))),
     load: (query) => this.service.list(query),
   });
+  readonly filterForm = new FormGroup({
+    search: new FormControl(this.list.filters().search, { nonNullable: true }),
+    role: new FormControl<UserRoleEnum | ''>(this.list.filters().role, {
+      nonNullable: true,
+    }),
+  });
 
   readonly removing = signal(false);
   readonly removeError = signal<string | null>(null);
 
   constructor() {
     this.page.add(this.list.loadState);
+
+    this.filterForm.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(
+          (previous, current) =>
+            previous.search === current.search && previous.role === current.role,
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => this.setFilters(this.filterForm.getRawValue()));
   }
 
   init(): void {
@@ -41,7 +60,7 @@ export class UsersPageState {
     this.list.setPage(page);
   }
 
-  setFilters(filters: UserFilterModel): void {
+  private setFilters(filters: UserFilterModel): void {
     this.list.setFilters(filters);
   }
 
