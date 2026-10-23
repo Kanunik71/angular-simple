@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 
-import { ToastVariant } from './toast.service';
+import { ToastVariant } from '../../../services/toast.service';
 
 @Component({
   selector: 'ui-toast',

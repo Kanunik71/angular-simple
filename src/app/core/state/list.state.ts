@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Observable, Subject, catchError, switchMap } from 'rxjs';
 
 import { ListPageModel, ListQueryModel } from '../../models/common/list.models';
-import { ComponentState } from './component.state';
+import { LoaderState } from './loader.state';
 
 export interface ListStateOptionsType<T, F extends object> {
   initialFilters: F;
@@ -23,15 +23,15 @@ export class ListState<T, F extends object> {
   private readonly filtersState: WritableSignal<F>;
   private readonly requests = new Subject<ListQueryModel<F>>();
 
-  readonly loadState = new ComponentState();
+  readonly loader = new LoaderState();
   readonly items = this.itemsState.asReadonly();
   readonly total = this.totalState.asReadonly();
   readonly page = this.pageState.asReadonly();
   readonly pageSize = computed(() => this.pageSizeState());
   readonly filters = computed(() => this.filtersState());
-  readonly loading = this.loadState.loading;
-  readonly loaded = this.loadState.loaded;
-  readonly error = this.loadState.error;
+  readonly loading = this.loader.loading;
+  readonly loaded = this.loader.loaded;
+  readonly error = this.loader.error;
   readonly pageCount = computed(() =>
     Math.max(1, Math.ceil(this.totalState() / this.pageSizeState())),
   );
@@ -44,7 +44,7 @@ export class ListState<T, F extends object> {
     this.requests
       .pipe(
         switchMap((query) =>
-          this.loadState
+          this.loader
             .load(() => this.options.load(query), {
               errorMessage: this.options.errorMessage,
             })

@@ -2,15 +2,15 @@ import { Component, inject, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { UiButton } from '../../common/button/ui-button';
-import { MODAL_REF } from '../modal-ref';
+import { MODAL_REF } from '../../../services/modal/modal-ref';
 import { UiModal } from '../ui-modal';
 
 export interface UiConfirmModalConfig {
-  title: string;
-  message: string;
+  titleKey: string;
+  messageKey: string;
   messageParams?: Record<string, unknown>;
-  confirmLabel?: string;
-  cancelLabel?: string;
+  confirmLabelKey?: string;
+  cancelLabelKey?: string;
   variant?: 'primary' | 'danger';
 }
 
@@ -22,11 +22,11 @@ export interface UiConfirmModalConfig {
   styleUrl: './ui-confirm-modal.scss',
 })
 export class UiConfirmModal {
-  readonly title = input.required<string>();
-  readonly message = input.required<string>();
+  readonly titleKey = input.required<string>();
+  readonly messageKey = input.required<string>();
   readonly messageParams = input<Record<string, unknown> | undefined>(undefined);
-  readonly confirmLabel = input('common.confirm');
-  readonly cancelLabel = input('common.cancel');
+  readonly confirmLabelKey = input('common.confirm');
+  readonly cancelLabelKey = input('common.cancel');
   readonly variant = input<'primary' | 'danger'>('primary');
 
   private readonly ref = inject(MODAL_REF);

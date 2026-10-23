@@ -3,7 +3,10 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { Injectable, Injector, Type, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { UiConfirmModal, UiConfirmModalConfig } from './confirm-modal/ui-confirm-modal';
+import {
+  UiConfirmModal,
+  UiConfirmModalConfig,
+} from '../../components/modal/confirm-modal/ui-confirm-modal';
 import { MODAL_REF, ModalRef } from './modal-ref';
 
 export interface ModalConfig {

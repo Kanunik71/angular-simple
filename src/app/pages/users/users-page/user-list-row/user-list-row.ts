@@ -1,11 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { UserModel } from '../../../../models/user/user.models';
-import { roleLabel } from '../../../../models/user/user-role.models';
-import { UiButton } from '../../../../ui-core/common/button/ui-button';
-import { UiSkeleton } from '../../../../ui-core/common/skeleton/ui-skeleton';
-import { UiTableCell } from '../../../../ui-core/layout/table/ui-table-cell';
+import { UserObject } from '../../../../models/user/user.models';
+import { roleLabelKey } from '../../../../models/user/user-role.models';
+import { UiButton } from '../../../../ui-core/components/common/button/ui-button';
+import { UiSkeleton } from '../../../../ui-core/components/common/skeleton/ui-skeleton';
+import { UiTableCell } from '../../../../ui-core/components/layout/table/ui-table-cell';
 
 @Component({
   selector: 'tr[app-user-list-row]',
@@ -14,11 +14,11 @@ import { UiTableCell } from '../../../../ui-core/layout/table/ui-table-cell';
   styleUrl: './user-list-row.scss',
 })
 export class UserListRow {
-  readonly user = input.required<UserModel>();
+  readonly user = input.required<UserObject>();
   readonly edit = output<void>();
   readonly remove = output<void>();
 
-  protected readonly roleLabel = roleLabel;
+  protected readonly roleLabelKey = roleLabelKey;
 }
 
 @Component({

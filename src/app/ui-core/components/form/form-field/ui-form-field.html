@@ -1,0 +1,5 @@
+<label class="ui-form-field__label" [attr.for]="fieldId()">
+  {{ labelKey() | translate }}
+</label>
+<ng-content />
+<ui-form-errors [control]="control()" [labelKey]="labelKey()" />

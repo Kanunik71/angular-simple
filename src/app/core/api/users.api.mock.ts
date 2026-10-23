@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { InMemoryDb } from '../http/in-memory-db';
+import { ApiErrorCodeEnum } from '../../models/common/common.models';
 import { ListPageModel, ListQueryModel } from '../../models/common/list.models';
 import { UserDraftModel, UserRoleEnum } from '../../models/user/user.models';
 import { UserFilterModel } from '../../models/user/user-filter.models';
@@ -50,7 +51,7 @@ export class UsersApiMock implements UsersApiContract {
 
   get(id: string): Observable<UserResponseModel> {
     const user = this.db.users.find((item) => item.id === id);
-    return user ? of({ ...user }) : Mock.fail(404, 'Пользователь не найден');
+    return user ? of({ ...user }) : Mock.fail(404, 'apiErrors.userNotFound');
   }
 
   create(body: UserDraftModel): Observable<UserResponseModel> {
@@ -60,7 +61,7 @@ export class UsersApiMock implements UsersApiContract {
     }
 
     if (this.hasEmail(draft.email)) {
-      return Mock.fail(400, 'Пользователь с таким email уже существует');
+      return Mock.fail(400, 'apiErrors.userEmailTaken');
     }
 
     const user: UserResponseModel = { id: crypto.randomUUID(), ...draft };
@@ -71,7 +72,7 @@ export class UsersApiMock implements UsersApiContract {
   update(id: string, body: UserDraftModel): Observable<UserResponseModel> {
     const current = this.db.users.find((user) => user.id === id);
     if (!current) {
-      return Mock.fail(404, 'Пользователь не найден');
+      return Mock.fail(404, 'apiErrors.userNotFound');
     }
 
     const draft = readDraft(body);
@@ -80,7 +81,7 @@ export class UsersApiMock implements UsersApiContract {
     }
 
     if (this.hasEmail(draft.email, id)) {
-      return Mock.fail(400, 'Пользователь с таким email уже существует');
+      return Mock.fail(400, 'apiErrors.userEmailTaken');
     }
 
     current.fullName = draft.fullName;
@@ -92,7 +93,7 @@ export class UsersApiMock implements UsersApiContract {
   remove(id: string): Observable<void> {
     const index = this.db.users.findIndex((user) => user.id === id);
     if (index < 0) {
-      return Mock.fail(404, 'Пользователь не найден');
+      return Mock.fail(404, 'apiErrors.userNotFound');
     }
 
     this.db.users.splice(index, 1);
@@ -113,20 +114,20 @@ function readRoleFilter(value: string | null): UserRoleEnum | '' {
   return value !== null && isRole(value) ? value : '';
 }
 
-function readDraft(body: unknown): UserDraftModel | string {
+function readDraft(body: unknown): UserDraftModel | ApiErrorCodeEnum {
   const source = Mock.record(body);
   const fullName = Mock.text(source, 'fullName');
   const email = Mock.text(source, 'email').toLowerCase();
   const role = Mock.text(source, 'role');
 
   if (!fullName) {
-    return 'Заполните имя';
+    return 'apiErrors.userNameRequired';
   }
   if (!EMAIL_PATTERN.test(email)) {
-    return 'Введите корректный email';
+    return 'apiErrors.userEmailInvalid';
   }
   if (!isRole(role)) {
-    return 'Выберите роль';
+    return 'apiErrors.userRoleRequired';
   }
 
   return { fullName, email, role };

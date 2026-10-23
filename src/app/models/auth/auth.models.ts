@@ -5,10 +5,12 @@ export interface LoginRequestModel {
   password: string;
 }
 
-export interface SessionModel {
-  username: string;
-  role: UserRoleEnum;
-  token: string;
+export class SessionObject {
+  constructor(
+    readonly username: string,
+    readonly role: UserRoleEnum,
+    readonly token: string,
+  ) {}
 }
 
 export interface JwtPayloadModel {

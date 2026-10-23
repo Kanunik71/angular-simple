@@ -29,7 +29,7 @@ export class MockBackend implements HttpBackend {
     const path = pathname(req.url);
 
     if (!path.startsWith('/api/')) {
-      return Mock.fail(404, 'Маршрут не найден');
+      return Mock.fail(404, 'apiErrors.routeNotFound');
     }
 
     if (req.method === 'POST' && path === LOGIN_PATH) {
@@ -37,7 +37,7 @@ export class MockBackend implements HttpBackend {
     }
 
     if (!isAuthorized(req)) {
-      return Mock.fail(401, 'Сессия недействительна. Войдите снова.');
+      return Mock.fail(401, 'apiErrors.unauthorized');
     }
 
     if (req.method === 'GET' && path === USERS_PATH) {
@@ -61,7 +61,7 @@ export class MockBackend implements HttpBackend {
       return this.users.remove(userId);
     }
 
-    return Mock.fail(404, 'Маршрут не найден');
+    return Mock.fail(404, 'apiErrors.routeNotFound');
   }
 }
 

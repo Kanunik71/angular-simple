@@ -19,11 +19,11 @@ export class AuthApiMock implements AuthApiContract {
     const password = Mock.text(source, 'password');
 
     if (!username || !password) {
-      return Mock.fail(400, 'Введите логин и пароль');
+      return Mock.fail(400, 'apiErrors.loginRequired');
     }
 
     if (username !== DEMO_USERNAME || password !== DEMO_PASSWORD) {
-      return Mock.fail(401, 'Неверный логин или пароль');
+      return Mock.fail(401, 'apiErrors.invalidCredentials');
     }
 
     const token = AccessToken.create({ sub: username, role: DEMO_ROLE });

@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 import { AuthService } from '../../services/auth/auth.service';
-import { SessionModel } from '../../models/auth/auth.models';
+import { SessionObject } from '../../models/auth/auth.models';
 import { ApiError } from '../../utils/http/api-error';
 import { Jwt } from '../../utils/jwt/jwt';
 import { TokenStorage } from './token.storage';
@@ -14,7 +14,7 @@ export class AuthState {
   private readonly tokens = inject(TokenStorage);
   private readonly translate = inject(TranslateService);
 
-  readonly session = signal<SessionModel | null>(this.restore());
+  readonly session = signal<SessionObject | null>(this.restore());
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly isAuthenticated = computed(() => this.session() !== null);
@@ -30,16 +30,12 @@ export class AuthState {
       .login({ username, password })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (response) => {
-          this.tokens.write(response.token);
-          this.session.set({
-            username: response.username,
-            role: response.role,
-            token: response.token,
-          });
+        next: (session) => {
+          this.tokens.write(session.token);
+          this.session.set(session);
         },
         error: (error: unknown) => {
-          this.error.set(ApiError.message(error, this.translate.instant('errors.login')));
+          this.error.set(this.translate.instant(ApiError.code(error) ?? 'errors.login'));
         },
       });
   }
@@ -50,7 +46,7 @@ export class AuthState {
     this.error.set(null);
   }
 
-  private restore(): SessionModel | null {
+  private restore(): SessionObject | null {
     const token = this.tokens.read();
     if (!token) {
       return null;
@@ -62,6 +58,6 @@ export class AuthState {
       return null;
     }
 
-    return { username: payload.sub, role: payload.role, token };
+    return new SessionObject(payload.sub, payload.role, token);
   }
 }

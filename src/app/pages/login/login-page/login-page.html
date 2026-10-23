@@ -6,10 +6,10 @@
         <p class="login-page__hint">{{ 'login.hint' | translate }}</p>
       </header>
 
-      <ui-form-field label="login.username">
+      <ui-form-field labelKey="login.username">
         <ui-input autocomplete="username" [formControl]="form.controls.username" />
       </ui-form-field>
-      <ui-form-field label="login.password">
+      <ui-form-field labelKey="login.password">
         <ui-input
           type="password"
           autocomplete="current-password"

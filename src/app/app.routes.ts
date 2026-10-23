@@ -20,7 +20,11 @@ export const APP_ROUTES: Routes = [
         path: AppRouteEnum.Users,
         loadChildren: () => import('./pages/users/users.routes').then((m) => m.USERS_ROUTES),
       },
+      {
+        path: '**',
+        loadChildren: () =>
+          import('./pages/not-found/not-found.routes').then((m) => m.NOT_FOUND_ROUTES),
+      },
     ],
   },
-  { path: '**', redirectTo: AppRouteEnum.Users },
 ];

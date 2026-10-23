@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import { LoginRequestModel, SessionModel } from '../../models/auth/auth.models';
+import { LoginRequestModel, SessionObject } from '../../models/auth/auth.models';
 import { AuthApi } from '../../core/api/auth.api';
 import { AuthMapper } from './auth.mapper';
 
@@ -9,7 +9,7 @@ import { AuthMapper } from './auth.mapper';
 export class AuthService {
   private readonly api = inject(AuthApi);
 
-  login(body: LoginRequestModel): Observable<SessionModel> {
+  login(body: LoginRequestModel): Observable<SessionObject> {
     return this.api.login(body).pipe(map((response) => AuthMapper.toSession(response)));
   }
 }

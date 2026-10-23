@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AuthState } from '../../core/auth/auth.state';
 import { allRoutes } from '../../core/router/all-routes';
 import { RouterService } from '../../core/router/router.service';
-import { UiButton } from '../../ui-core/common/button/ui-button';
+import { UiButton } from '../../ui-core/components/common/button/ui-button';
 
 @Component({
   selector: 'app-header',

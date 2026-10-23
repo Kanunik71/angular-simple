@@ -33,6 +33,10 @@ export const RU: TranslationObject = {
     submit: 'Войти',
     submitting: 'Вход…',
   },
+  notFound: {
+    title: 'Страница не найдена',
+    message: 'Такой страницы нет. Проверьте адрес или вернитесь к списку пользователей.',
+  },
   users: {
     title: 'Пользователи',
     add: 'Добавить',
@@ -59,7 +63,6 @@ export const RU: TranslationObject = {
   userForm: {
     createTitle: 'Новый пользователь',
     editTitle: 'Редактировать пользователя',
-    notFound: 'Пользователь не найден',
     name: 'Имя',
     email: 'Email',
     role: 'Роль',
@@ -71,5 +74,16 @@ export const RU: TranslationObject = {
     email: 'Введите корректный email',
     invalid: 'Проверьте значение поля',
     login: 'Не удалось войти',
+  },
+  apiErrors: {
+    routeNotFound: 'Маршрут не найден',
+    unauthorized: 'Сессия недействительна. Войдите снова.',
+    loginRequired: 'Введите логин и пароль',
+    invalidCredentials: 'Неверный логин или пароль',
+    userNotFound: 'Пользователь не найден',
+    userNameRequired: 'Заполните имя',
+    userEmailInvalid: 'Введите корректный email',
+    userRoleRequired: 'Выберите роль',
+    userEmailTaken: 'Пользователь с таким email уже существует',
   },
 };

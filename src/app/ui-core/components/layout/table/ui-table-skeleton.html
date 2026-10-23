@@ -4,7 +4,7 @@
       <tr class="ui-table__row">
         @for (column of columns(); track column.key) {
           <th uiTableCell [align]="column.align ?? 'left'">
-            {{ column.label | translate }}
+            {{ column.labelKey | translate }}
           </th>
         }
       </tr>

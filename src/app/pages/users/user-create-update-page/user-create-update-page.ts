@@ -3,16 +3,16 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { UserDraftModel } from '../../../models/user/user.models';
 import { allRoutes } from '../../../core/router/all-routes';
 import { RouterService } from '../../../core/router/router.service';
 import { PageContainer } from '../../../layout/page-container/page-container';
 import { PageHeader } from '../../../layout/page-header/page-header';
-import { UiAlert } from '../../../ui-core/common/alert/ui-alert';
-import { UiButton } from '../../../ui-core/common/button/ui-button';
-import { UiSkeleton } from '../../../ui-core/common/skeleton/ui-skeleton';
-import { UiFormActions } from '../../../ui-core/form/ui-form-actions';
-import { UiCard } from '../../../ui-core/layout/card/ui-card';
+import { UiAlert } from '../../../ui-core/components/common/alert/ui-alert';
+import { UiButton } from '../../../ui-core/components/common/button/ui-button';
+import { UiSkeleton } from '../../../ui-core/components/common/skeleton/ui-skeleton';
+import { UiForm } from '../../../ui-core/components/form/ui-form';
+import { UiFormActions } from '../../../ui-core/components/form/ui-form-actions';
+import { UiCard } from '../../../ui-core/components/layout/card/ui-card';
 import { UserCreateUpdateForm } from '../../../entities/user/user-create-update-form/user-create-update-form';
 import { UserCreateUpdatePageState } from './user-create-update-page.state';
 
@@ -25,6 +25,7 @@ import { UserCreateUpdatePageState } from './user-create-update-page.state';
     UiAlert,
     UiButton,
     UiCard,
+    UiForm,
     UiFormActions,
     UiSkeleton,
     UserCreateUpdateForm,
@@ -61,10 +62,6 @@ export class UserCreateUpdatePage implements OnInit {
 
   ngOnInit(): void {
     this.state.init(this.userId());
-  }
-
-  protected save(draft: UserDraftModel): void {
-    this.state.save(draft);
   }
 
   protected back(): void {

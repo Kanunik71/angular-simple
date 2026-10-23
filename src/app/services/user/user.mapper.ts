@@ -1,17 +1,17 @@
-import { UserRoleEnum, UserModel } from '../../models/user/user.models';
+import { UserRoleEnum, UserObject } from '../../models/user/user.models';
 import { UserResponseModel } from '../../models/user/user-response.models';
 
 export class UserMapper {
-  static toUser(response: UserResponseModel): UserModel {
+  static toUser(response: UserResponseModel): UserObject {
     const role = UserMapper.toRole(response.role);
-    return {
-      id: response.id,
-      fullName: response.fullName,
-      email: response.email,
+    return new UserObject(
+      response.id,
+      response.fullName,
+      response.email,
       role,
-      initials: UserMapper.toInitials(response.fullName),
-      isAdmin: role === 'admin',
-    };
+      UserMapper.toInitials(response.fullName),
+      role === 'admin',
+    );
   }
 
   private static toRole(value: string): UserRoleEnum {

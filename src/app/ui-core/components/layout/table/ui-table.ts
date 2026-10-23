@@ -6,7 +6,7 @@ import { UiTableCell } from './ui-table-cell';
 
 export interface UiTableColumn {
   key: string;
-  label: string;
+  labelKey: string;
   align?: 'left' | 'right' | 'center';
 }
 
@@ -25,7 +25,7 @@ export class UiTable {
   readonly rows = input.required<readonly unknown[]>();
   readonly columns = input.required<readonly UiTableColumn[]>();
   readonly rowKey = input.required<(row: any) => string | number>();
-  readonly emptyLabel = input.required<string>();
+  readonly emptyLabelKey = input.required<string>();
 
   protected readonly rowTemplate = contentChild.required(UiTableRow);
 }

@@ -1,4 +1,7 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import { ApiError } from '../../utils/http/api-error';
 
 export type ToastVariant = 'info' | 'error' | 'success';
 
@@ -13,6 +16,7 @@ const TOAST_DURATION_MS = 5000;
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
   private readonly toastsState = signal<readonly ToastType[]>([]);
   private readonly timers = new Map<number, ReturnType<typeof setTimeout>>();
   private nextId = 0;
@@ -32,6 +36,14 @@ export class ToastService {
 
   error(message: string): void {
     this.show('error', message);
+  }
+
+  fromError(error: unknown, fallbackKey: string): string {
+    const message = this.translate.instant(ApiError.code(error) ?? fallbackKey);
+
+    console.error(error);
+    this.error(message);
+    return message;
   }
 
   success(message: string): void {

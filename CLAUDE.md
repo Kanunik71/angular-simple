@@ -43,14 +43,17 @@ npx prettier --check "src/**/*.{ts,html,scss}"
 | `/users/new`      | только с сессией     | `pages/users` |
 | `/users/:id/edit` | только с сессией     | `pages/users` |
 | `/`               | редирект на `/users` | —             |
+| любой другой путь | только с сессией     | `pages/not-found` |
 
-Обе секции подключены через `loadChildren`. Guard, interceptors и контракты API остаются в основном чанке: они нужны до загрузки страницы.
+Секции подключены через `loadChildren`. Guard, interceptors и контракты API остаются в основном чанке: они нужны до загрузки страницы.
 
 Форма пользователя — отдельная страница, а не модалка. `/users/new` и `/users/:id/edit` рендерят один компонент `UserCreateUpdatePage` и различаются наличием параметра `id`.
 
 У каждой страницы свой state: `UsersPageState` у списка и `UserCreateUpdatePageState` у формы. Оба провайдятся на компонентах страниц; загрузка запускается из `ngOnInit`. После сохранения форма возвращается на список, и список загружается заново — фильтры и номер страницы при этом сбрасываются.
 
 Неавторизованный переход на любой другой адрес приводит к `/login`. Авторизованный переход на `/login` приводит к `/users`.
+
+Неизвестный путь при активной сессии рендерит `NotFoundPage` по тому же URL, без редиректа. Если маршрут валиден, а API вернул `404`, это не страница 404: state показывает тост и ошибку на месте (например, `UserCreateUpdatePageState`).
 
 ## Роутинг
 
@@ -87,7 +90,7 @@ pages     ->  *.routes.ts + <name>-page/<name>-page.ts  ->  *.state.ts  ->  Auth
 entities  ->  <entity>/<component>/<component>.ts
 services  ->  <entity>/<entity>.service.ts + <entity>.mapper.ts
 models    ->  типы по сущностям
-ui-core   ->  common, form, layout, modal
+ui-core   ->  components/{common,form,layout,modal} + services
 utils     ->  классы со статическими методами
 i18n      ->  словарь, лоадер, провайдер переводов
 core      ->  инфраструктура: api, http, auth, router
@@ -99,11 +102,11 @@ core      ->  инфраструктура: api, http, auth, router
 
 Слой моделей — `src/app/models`, подпапка на сущность, файл на группу типов. У всех файлов суффикс `.models.ts` — без исключений, включая не только типы.
 
-- `models/user/` — `user.models.ts` (`UserModel`, `UserDraftModel`, `UserRoleEnum`), `user-response.models.ts` (`UserResponseModel`), `user-role.models.ts` (`UserRoleOptionModel`, `ROLE_OPTIONS`, `roleLabel`)
-- `models/auth/` — `auth.models.ts`: `LoginRequestModel`, `SessionModel`, `JwtPayloadModel`; `auth-response.models.ts`: `LoginResponseModel`
+- `models/user/` — `user.models.ts` (`UserObject`, `UserDraftModel`, `UserRoleEnum`), `user-response.models.ts` (`UserResponseModel`), `user-role.models.ts` (`UserRoleOptionModel`, `ROLE_OPTIONS`, `roleLabelKey`)
+- `models/auth/` — `auth.models.ts`: `LoginRequestModel`, `SessionObject`, `JwtPayloadModel`; `auth-response.models.ts`: `LoginResponseModel`
 - `models/common/` — `common.models.ts`: `ApiErrorBodyModel`, общий контракт ошибки
 
-Суффикс отражает вид объявления: `interface` — `Model`, `enum` и enum-подобный union — `Enum`, остальные `type` — `Type`; файл — `models.ts`. `UserModel` и `UserDraftModel` живут в одном `user.models.ts`, а `UserRoleEnum` отличается суффиксом, потому что это не интерфейс, а перечисление. Сейчас `Enum` один на весь слой — `UserRoleEnum`.
+Суффикс отражает вид объявления: `interface` — `Model`, `class` — `Object`, `enum` и enum-подобный union — `Enum`, остальные `type` — `Type`; файл — `models.ts`. `UserObject` (класс) и `UserDraftModel` (интерфейс) живут в одном `user.models.ts`, а `UserRoleEnum` отличается суффиксом, потому что это не интерфейс и не класс, а перечисление. Сейчас `Enum` один на весь слой — `UserRoleEnum`.
 
 Правило действует только в `models/`. Контракты API (`AuthApiContract`, `UsersApiContract`) и описания контролов (`UiSelectOption`) так не переименовываются: это не модели.
 
@@ -112,15 +115,15 @@ core      ->  инфраструктура: api, http, auth, router
 Типы делятся на два слоя, и разница видна по имени файла.
 
 - `<entity>-response.models.ts` — то, что приходит с сервера. Поля там ровно те, что в ответе, и типы ослаблены: `UserResponseModel.role` это `string`, а не `UserRoleEnum`. Сервер не гарантирует нам enum.
-- `<entity>.models.ts` — домен. `UserModel extends UserResponseModel` сужает `role` до `UserRoleEnum` и добавляет то, что считает маппер: `initials`, `isAdmin`.
+- `<entity>.models.ts` — домен. `UserObject implements UserResponseModel` сужает `role` до `UserRoleEnum` и добавляет то, что считает маппер: `initials`, `isAdmin`.
 
-Наследование ставим, когда это тот же объект с большей детализацией. Если сущности разные, даже при совпадении полей, наследования нет — связь выражает маппер. `SessionModel` не наследует `LoginResponseModel`: ответ логина и сессия приложения — разные сущности, они просто похожи.
+Наследование ставим, когда это тот же объект с большей детализацией. Если сущности разные, даже при совпадении полей, наследования нет — связь выражает маппер. `SessionObject` не наследует `LoginResponseModel`: ответ логина и сессия приложения — разные сущности, они просто похожи.
 
 Запросы пока ходят по доменным типам: `UsersApi.create(body: UserDraftModel)`. Симметричного `UserCreateRequestModel` нет, потому что форма и сервер сейчас совпадают и маппинг был бы тождественным. Заводить DTO для запроса, когда сервер начнёт принимать другую форму.
 
-В `models/<entity>/` лежит всё, что описывает значения сущности: типы, enum-подобные union-типы, списки значений для селектов и их подписи. Списки значений и их подписи — часть модели, а не утилита страницы: `ROLE_OPTIONS` и `roleLabel` лежат в `models/user/`, а не в `pages/users/`.
+В `models/<entity>/` лежит всё, что описывает значения сущности: типы, enum-подобные union-типы, списки значений для селектов и их подписи. Списки значений и их подписи — часть модели, а не утилита страницы: `ROLE_OPTIONS` и `roleLabelKey` лежат в `models/user/`, а не в `pages/users/`.
 
-Подписи в модели хранятся ключами перевода, а не готовым текстом: `ROLE_OPTIONS[].label` — это `roles.admin`, а `roleLabel(role)` возвращает ключ. Модель не знает про `TranslateService` — переводом занимается шаблон. Иначе модель зависела бы от i18n. По той же причине в модели нет готовых подписей: даже те, что считает маппер, не тянут текст, только значения вроде `initials` и `isAdmin`.
+Подписи в модели хранятся ключами перевода, а не готовым текстом: `ROLE_OPTIONS[].labelKey` — это `roles.admin`, а `roleLabelKey(role)` возвращает ключ. Модель не знает про `TranslateService` — переводом занимается шаблон. Иначе модель зависела бы от i18n. По той же причине в модели нет готовых подписей: даже те, что считает маппер, не тянут текст, только значения вроде `initials` и `isAdmin`.
 
 Модель не знает про `ui-core`. Тип элемента списка описываем сами (`UserRoleOptionModel`), а не импортируем `UiSelectOption`: структурная совместимость позволяет передать его в селект без обратной зависимости.
 
@@ -130,12 +133,13 @@ Barrel-файлов нет: импортируем нужный файл нап�
 
 ## services
 
-Слой `src/app/services` — доступ к данным поверх API. Сейчас два: `services/user/user.service.ts` и `services/auth/auth.service.ts`.
+Слой `src/app/services` — доступ к данным поверх API. Два data-сервиса: `services/user/user.service.ts` и `services/auth/auth.service.ts`. Рядом лежит сценарный `services/user/user-action.service.ts`: он не ходит в API напрямую, а собирает подтверждение с текстовыми ключами и вызывает `UserService`. Сценарный сервис тоже не знает про `pages`, не держит состояние и возвращает `Observable`, но, в отличие от data-сервиса, зависит от `ui-core`.
 
 - Не знает про `pages` и `entities`. Сервис не знает, кто его зовёт.
 - Не держит состояние: ни `signal`, ни подписки. Возвращает `Observable`. Состояние живёт в `*.state.ts`
 - `providedIn: 'root'`, в отличие от state
 - Маппер лежит рядом, `services/<entity>/<entity>.mapper.ts`, и ничего не знает про DI — это класс со статическими методами
+- Подтверждение и текстовые ключи действия живут в сценарном сервисе, а не в data-сервисе и не в каждой странице. Саму модалку открывает `ConfirmService` из `ui-core`
 
 Порядок такой: `*.state.ts` → сервис → API. State отвечает за реактивность и за тексты ошибок, сервис — за форму данных, API — за провод.
 
@@ -147,7 +151,8 @@ Barrel-файлов нет: импортируем нужный файл нап�
 
 - Не импортирует из `pages`. Иначе «общий» компонент оказывается привязан к секции, ради которой его выносили
 - Не ходит в API и не держит состояние — только `input` и `output`. Состояние и HTTP остаются в `pages/<section>/<page>/<page>.state.ts`
-- Вложенность как в `pages`: `<entity>/<component>/<component>.ts`; в `ui-core` компонент лежит внутри группы
+- `UserCreateUpdateForm` рендерит только поля; submit, loading и текст ошибки остаются на странице
+- Вложенность как в `pages`: `<entity>/<component>/<component>.ts`; в `ui-core/components` компонент лежит внутри группы
 - **Критерий переезда:** подкомпонент уезжает из своей страницы в `entities`, когда понадобился второй странице. Не заранее
 
 Граница с `ui-core`: `ui-core` — про что угодно и ни про какую сущность, `entities` — про конкретную сущность. `UserCreateUpdateForm` знает про `ROLE_OPTIONS`, поэтому в `ui-core` ему нельзя.
@@ -171,6 +176,8 @@ Barrel-файлов нет: импортируем нужный файл нап�
 HTTP-лоадер не нужен: словарь лежит в коде. Подключать `@ngx-translate/http-loader` нельзя — его запрос ушёл бы в `MockBackend` и получил бы `404`.
 
 В шаблоне — пайп `| translate`, в TypeScript — `translate.instant('ключ', { params })`. Ключей в компонентах не хардкодим русским текстом.
+
+Если параметр, поле конфига или input принимает ключ перевода, в имени есть суффикс `Key`: `fallbackKey`, `labelKey`, `emptyLabelKey`, `confirmLabelKey`, `titleKey`. Текст без суффикса: `ToastService.success(message)`, `UiModal.title`, `PageHeader.title`. По имени сразу видно, что переводить, а что показывать как есть.
 
 Два места словаря живут вне слоя i18n осознанно:
 
@@ -199,7 +206,7 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 - `src/app/core/api/users.api.mock.ts` — список и сохранение, `InMemoryDb` лежит рядом
 - `src/app/utils/mock/mock.ts` — `Mock.fail`, разбор тела запроса, задержка
 
-Мок отвечает тем же, что ответил бы сервер: успех отдаёт значение, ошибка — `HttpErrorResponse` с `{ message }`. В `HttpResponse` его оборачивает сам `MockBackend`.
+Мок отвечает тем же, что ответил бы сервер: успех отдаёт значение, ошибка — `HttpErrorResponse` с `{ code }`. Код ошибки — это ключ перевода (`apiErrors.*`), его переводит UI через `translate`. В `HttpResponse` его оборачивает сам `MockBackend`.
 
 `MockBackend` знает только вещи, не относящиеся к сущности: карту маршрутов, проверку токена, задержку. Ответ на запрос, который не начинается с `/api/`, — `404`.
 
@@ -220,26 +227,35 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 Файл `*.state.ts` — класс со `signal` и `computed`. Если страница владеет формой, `FormGroup` лежит в state; шаблон читает signals и эту форму. Подписка на HTTP остаётся внутри state.
 
 - `AuthState` — сессия всего приложения, `providedIn: 'root'`
-- `UsersPageState` — список, фильтры и удаление; `list: ListState`, `filterForm: FormGroup`, `page: ComponentState`; провайдится на `UsersPage`, загрузка запускается из `ngOnInit`
-- `UserCreateUpdatePageState` — загрузка и сохранение пользователя; `page: ComponentState`, `form: FormGroup`; провайдится на `UserCreateUpdatePage`, загрузка запускается из `ngOnInit`
+- `UsersPageState` — список, фильтры и удаление; `list: ListState`, `filterForm: FormGroup`, `loader: LoaderState`; провайдится на `UsersPage`, загрузка запускается из `ngOnInit`
+- `UserCreateUpdatePageState` — загрузка, валидация, подготовка draft и сохранение пользователя; `loader: LoaderState`, `form: FormGroup`; провайдится на `UserCreateUpdatePage`, загрузка запускается из `ngOnInit`
 
 У страницы своё UI-состояние: открыт ли диалог удаления, кого удаляем. Это остаётся в `UsersPage`; форма пользователя живёт в `UserCreateUpdatePageState`.
 
 ## ui-core
 
-Компоненты сгруппированы по назначению:
+Слой разделён на компоненты и сервисы.
 
-- `common/` — `ui-alert`, `ui-button`, `ui-skeleton`, `ui-spinner`, `ui-toast`
-- `form/` — `ui-form`, `ui-form-actions`, `ui-filters`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
-- `layout/` — `ui-card`, `ui-pagination`, `ui-table`
-- `modal/` — `ui-modal`, `ModalService` / `ModalRef`, `ui-confirm-modal`
+Компоненты лежат в `components/` и сгруппированы по назначению:
+
+- `components/common/` — `ui-alert`, `ui-button`, `ui-skeleton`, `ui-spinner`, `ui-toast`
+- `components/form/` — `ui-form`, `ui-form-actions`, `ui-filters`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
+- `components/layout/` — `ui-card`, `ui-pagination`, `ui-table`
+- `components/modal/` — `ui-modal`, `ui-confirm-modal`
+
+Сервисы лежат в `services/`:
+
+- `ToastService` — `services/toast.service.ts`
+- `ModalService` / `ModalRef` / `ConfirmService` — `services/modal/`
 
 - `button[uiButton]` — варианты `primary`, `secondary`, `ghost`, `danger`. Нативный `type` и `disabled` остаются на кнопке.
 - `ui-filters` — только раскладка фильтров: grid и `ng-content`. `FormGroup` и сами поля остаются на странице; компонент не знает ни про сущность, ни про состав фильтров.
 - `ui-input` и `ui-select` реализуют `ControlValueAccessor`.
 - В `ui-select` выбранный вариант помечается через `[selected]` на `<option>`, а не через `[value]` на `<select>`: биндинг `value` применяется раньше, чем `@for` создаёт сами `<option>`, и значение терялось бы.
-- `UiSelectOption.label` — это ключ перевода, `ui-select` прогоняет его через `| translate` сам. Вызывающий код подписи не переводит.
+- `UiSelectOption.labelKey` — это ключ перевода, `ui-select` прогоняет его через `| translate` сам. Вызывающий код подписи не переводит.
 - `ui-modal` переносит панель в CDK Overlay, ловит фокус через `cdkTrapFocus` и закрывается по backdrop, Escape и кнопке.
+- `ConfirmService.ask` держит только одну активную модалку подтверждения: новый вызов и переход по маршруту закрывают предыдущую. Текстовые ключи передаёт вызывающий сценарный сервис.
+- `ToastService.fromError(error, fallbackKey)` разбирает ошибку через `ApiError`, переводит fallback, пишет `console.error`, показывает тост и возвращает текст. Состояния передают его в `errorMessage` и поля ошибок.
 
 ## ARIA
 
@@ -269,6 +285,6 @@ Backdrop модалки — единственное глобальное пра
 3. Провайдить `PageState` на компоненте страницы, а не в `root`, и запускать загрузку из `ngOnInit`.
 4. Ходить в бекенд через отдельный API-класс и `HttpClient`. Доступ приложения к API — через `src/app/services/<entity>/<entity>.service.ts`, который маппит ответы в доменные модели.
 5. Новый ответ мока добавить в `*.api.mock.ts` рядом с его API-классом и в карту маршрутов `MockBackend`.
-6. Повторяемые контролы класть в `ui-core` в подходящую группу: `common`, `form`, `layout`, `modal`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Model`, перечисление с `Enum`, остальные `type` с `Type`, файл с `.models.ts`.
+6. Повторяемые контролы класть в `ui-core/components` в подходящую группу: `common`, `form`, `layout`, `modal`; сервисы `ui-core` — в `ui-core/services`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Model`, перечисление с `Enum`, остальные `type` с `Type`, файл с `.models.ts`.
 7. Стили страницы писать по БЭМ и на токенах из `variables.scss`. Новый сырой цвет — только в `palette.scss`. Размеры в `px`, без `rem` и `em`.
 8. Все пользовательские строки брать из словаря: в шаблоне `| translate`, в TypeScript `translate.instant()`. Новый ключ добавлять в `i18n/ru.ts`.

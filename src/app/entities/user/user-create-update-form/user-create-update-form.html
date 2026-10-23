@@ -1,22 +1,9 @@
-<ui-form [formGroup]="form()" (submitted)="submit()">
-  <ui-form-field label="userForm.name">
-    <ui-input [formControl]="form().controls.fullName" />
-  </ui-form-field>
-  <ui-form-field label="userForm.email">
-    <ui-input type="email" autocomplete="off" [formControl]="form().controls.email" />
-  </ui-form-field>
-  <ui-form-field label="userForm.role">
-    <ui-select [formControl]="form().controls.role" [options]="roles" />
-  </ui-form-field>
-  @if (serverError()) {
-    <ui-alert>{{ serverError() }}</ui-alert>
-  }
-  <ui-form-actions>
-    <button uiButton type="button" variant="secondary" (click)="cancelled.emit()">
-      {{ 'common.cancel' | translate }}
-    </button>
-    <button uiButton type="submit" [disabled]="saving()">
-      {{ (saving() ? 'userForm.saving' : 'userForm.save') | translate }}
-    </button>
-  </ui-form-actions>
-</ui-form>
+<ui-form-field labelKey="userForm.name">
+  <ui-input [formControl]="form().controls.fullName" />
+</ui-form-field>
+<ui-form-field labelKey="userForm.email">
+  <ui-input type="email" autocomplete="off" [formControl]="form().controls.email" />
+</ui-form-field>
+<ui-form-field labelKey="userForm.role">
+  <ui-select [formControl]="form().controls.role" [options]="roles" />
+</ui-form-field>

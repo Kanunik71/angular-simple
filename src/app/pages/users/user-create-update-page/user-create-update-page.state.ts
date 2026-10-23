@@ -1,16 +1,14 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, of } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
 
 import { UserDraftModel, UserRoleEnum } from '../../../models/user/user.models';
-import { ComponentState } from '../../../core/state/component.state';
+import { LoaderState } from '../../../core/state/loader.state';
 import { UserService } from '../../../services/user/user.service';
-import { ToastService } from '../../../ui-core/common/toast/toast.service';
+import { ToastService } from '../../../ui-core/services/toast.service';
 import { FormValidators } from '../../../utils/forms/form.validators';
-import { ApiError } from '../../../utils/http/api-error';
 import type { UserCreateUpdateFormGroup } from '../../../entities/user/user-create-update-form/user-create-update-form';
 
 @Injectable()
@@ -20,9 +18,7 @@ export class UserCreateUpdatePageState {
   private readonly translate = inject(TranslateService);
   private readonly toast = inject(ToastService);
 
-  readonly page = new ComponentState();
-  readonly saving = signal(false);
-  readonly formError = signal<string | null>(null);
+  readonly loader = new LoaderState();
   readonly saved = signal(0);
   readonly form: UserCreateUpdateFormGroup = new FormGroup({
     fullName: new FormControl('', { nonNullable: true, validators: [FormValidators.requiredTrim] }),
@@ -40,75 +36,57 @@ export class UserCreateUpdatePageState {
 
   init(id: string | null): void {
     this.id = id;
-    this.formError.set(null);
-    this.page.reset();
+    this.loader.reset();
     this.form.reset({ fullName: '', email: '', role: 'user' });
 
     if (!id) {
       return;
     }
 
-    this.page
+    this.loader
       .load(() => this.service.get(id), {
-        errorMessage: (error) => this.userErrorMessage(error),
+        errorMessage: (error) => this.toast.fromError(error, 'users.loadUserError'),
       })
       .pipe(
-        catchError(() => of(null)),
+        catchError(() => EMPTY),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((user) => {
-        if (!user) {
-          return;
-        }
-
+      .subscribe((user) =>
         this.form.reset({
           fullName: user.fullName,
           email: user.email,
           role: user.role,
-        });
-      });
+        }),
+      );
   }
 
-  save(draft: UserDraftModel): void {
-    if (this.saving()) {
+  save(): void {
+    if (this.loader.loading()) {
       return;
     }
 
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const value = this.form.getRawValue();
+    const draft: UserDraftModel = {
+      fullName: value.fullName.trim(),
+      email: value.email.trim(),
+      role: value.role,
+    };
     const id = this.id;
-    this.saving.set(true);
-    this.formError.set(null);
     const request = id ? this.service.update(id, draft) : this.service.create(draft);
 
-    request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
+    this.loader
+      .run(() => request, {
+        errorMessage: (error) => this.toast.fromError(error, 'users.saveError'),
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
         this.toast.success(this.translate.instant(id ? 'users.updated' : 'users.created'));
         this.saved.update((count) => count + 1);
-        this.saving.set(false);
-      },
-      error: (error: unknown) => {
-        this.formError.set(
-          this.notifyError(
-            error,
-            ApiError.message(error, this.translate.instant('users.saveError')),
-          ),
-        );
-        this.saving.set(false);
-      },
-    });
-  }
-
-  private userErrorMessage(error: unknown): string {
-    const message =
-      error instanceof HttpErrorResponse && error.status === 404
-        ? this.translate.instant('userForm.notFound')
-        : ApiError.message(error, this.translate.instant('users.loadUserError'));
-
-    return this.notifyError(error, message);
-  }
-
-  private notifyError(error: unknown, message: string): string {
-    console.error(error);
-    this.toast.error(message);
-    return message;
+      });
   }
 }

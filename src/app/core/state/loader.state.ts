@@ -1,18 +1,18 @@
 import { Signal, computed, signal } from '@angular/core';
-import { Observable, catchError, defer, finalize, tap, throwError } from 'rxjs';
+import { EMPTY, Observable, catchError, defer, finalize, tap, throwError } from 'rxjs';
 
-export type ComponentStateLoadType<T> = () => Observable<T>;
+export type LoaderStateLoadType<T> = () => Observable<T>;
 
-export interface ComponentStateLoadOptionsType {
+export interface LoaderStateLoadOptionsType {
   errorMessage: (error: unknown) => string;
 }
 
-export class ComponentState {
+export class LoaderState {
   private readonly pending = signal<ReadonlySet<number>>(new Set());
   private readonly started = signal(false);
   private readonly ownLoaded = signal(false);
   private readonly errorsState = signal<readonly string[]>([]);
-  private readonly childrenState = signal<readonly ComponentState[]>([]);
+  private readonly childrenState = signal<readonly LoaderState[]>([]);
 
   private generation = 0;
   private nextToken = 0;
@@ -34,10 +34,7 @@ export class ComponentState {
   readonly initialLoading: Signal<boolean> = computed(() => !this.loaded() && !this.hasError());
   readonly refreshing: Signal<boolean> = computed(() => this.loaded() && this.loading());
 
-  load<T>(
-    loader: ComponentStateLoadType<T>,
-    options: ComponentStateLoadOptionsType,
-  ): Observable<T> {
+  load<T>(loader: LoaderStateLoadType<T>, options: LoaderStateLoadOptionsType): Observable<T> {
     return defer(() => {
       const generation = this.generation;
       const token = ++this.nextToken;
@@ -73,7 +70,36 @@ export class ComponentState {
     });
   }
 
-  add(child: ComponentState): () => void {
+  run<T>(action: LoaderStateLoadType<T>, options: LoaderStateLoadOptionsType): Observable<T> {
+    return defer(() => {
+      if (this.pending().size > 0) {
+        return EMPTY;
+      }
+
+      const token = ++this.nextToken;
+      this.errorsState.set([]);
+      this.pending.update((pending) => new Set(pending).add(token));
+
+      return defer(action).pipe(
+        catchError((error: unknown) => {
+          this.errorsState.update((errors) => [...errors, options.errorMessage(error)]);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.pending.update((pending) => {
+            if (!pending.has(token)) {
+              return pending;
+            }
+            const next = new Set(pending);
+            next.delete(token);
+            return next;
+          });
+        }),
+      );
+    });
+  }
+
+  add(child: LoaderState): () => void {
     this.childrenState.update((children) =>
       children.includes(child) ? children : [...children, child],
     );

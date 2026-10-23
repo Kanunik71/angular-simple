@@ -3,24 +3,24 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ApiErrorBodyModel } from '../../models/common/common.models';
 
 export class ApiError {
-  static message(error: unknown, fallback: string): string {
+  static code(error: unknown): string | null {
     if (!(error instanceof HttpErrorResponse)) {
-      return fallback;
+      return null;
     }
 
     const body: unknown = error.error;
-    if (isApiErrorBody(body) && body.message.trim().length > 0) {
-      return body.message;
+    if (isApiErrorBody(body) && body.code.trim().length > 0) {
+      return body.code;
     }
 
-    return fallback;
+    return null;
   }
 }
 
 function isApiErrorBody(value: unknown): value is ApiErrorBodyModel {
-  if (typeof value !== 'object' || value === null || !('message' in value)) {
+  if (typeof value !== 'object' || value === null || !('code' in value)) {
     return false;
   }
 
-  return typeof value.message === 'string';
+  return typeof value.code === 'string';
 }

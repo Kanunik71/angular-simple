@@ -12,7 +12,7 @@ import { UiFormErrors } from './ui-form-errors';
   styleUrl: './ui-form-field.scss',
 })
 export class UiFormField {
-  readonly label = input.required<string>();
+  readonly labelKey = input.required<string>();
 
   private readonly fieldControl = contentChild(UI_FORM_FIELD_CONTROL);
   protected readonly control = computed(() => this.fieldControl()?.control ?? null);

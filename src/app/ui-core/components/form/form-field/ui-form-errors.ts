@@ -10,7 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UiFormErrors {
   readonly control = input<AbstractControl | null>(null);
-  readonly label = input.required<string>();
+  readonly labelKey = input.required<string>();
 
   private readonly translate = inject(TranslateService);
   protected readonly message = signal<string | null>(null);
@@ -18,14 +18,14 @@ export class UiFormErrors {
   constructor() {
     effect((onCleanup) => {
       const control = this.control();
-      const label = this.label();
+      const labelKey = this.labelKey();
 
       if (!control) {
         this.message.set(null);
         return;
       }
 
-      const update = () => this.message.set(this.resolve(control, label));
+      const update = () => this.message.set(this.resolve(control, labelKey));
       update();
 
       const subscription = control.events.subscribe(update);
@@ -33,7 +33,7 @@ export class UiFormErrors {
     });
   }
 
-  private resolve(control: AbstractControl, label: string): string | null {
+  private resolve(control: AbstractControl, labelKey: string): string | null {
     if (!control.touched || !control.errors) {
       return null;
     }
@@ -44,7 +44,7 @@ export class UiFormErrors {
 
     if (control.errors['required']) {
       return this.translate.instant('errors.required', {
-        label: this.translate.instant(label),
+        label: this.translate.instant(labelKey),
       });
     }
 

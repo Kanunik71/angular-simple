@@ -2,10 +2,15 @@ import { UserResponseModel } from './user-response.models';
 
 export type UserRoleEnum = 'admin' | 'user';
 
-export interface UserModel extends UserResponseModel {
-  role: UserRoleEnum;
-  initials: string;
-  isAdmin: boolean;
+export class UserObject implements UserResponseModel {
+  constructor(
+    readonly id: string,
+    readonly fullName: string,
+    readonly email: string,
+    readonly role: UserRoleEnum,
+    readonly initials: string,
+    readonly isAdmin: boolean,
+  ) {}
 }
 
 export interface UserDraftModel {

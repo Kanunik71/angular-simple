@@ -11,7 +11,7 @@ import { UI_FORM_FIELD_CONTROL } from '../form-field/ui-form-field-control';
 
 export interface UiSelectOption {
   value: string;
-  label: string;
+  labelKey: string;
 }
 
 let nextFieldId = 0;

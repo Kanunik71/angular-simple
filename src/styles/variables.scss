@@ -11,6 +11,7 @@
   --color-danger-soft: var(--palette-red-50);
   --color-success: var(--palette-green-600);
   --color-on-primary: var(--palette-white);
+  --color-backdrop: color-mix(in srgb, var(--palette-ink) 48%, transparent);
   --font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
   --font-size-sm: 14px;
   --font-size-md: 16px;

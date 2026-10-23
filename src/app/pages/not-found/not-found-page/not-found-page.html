@@ -1,0 +1,13 @@
+<app-page-container>
+  <app-page-header [title]="'notFound.title' | translate" />
+
+  <ui-card>
+    <div class="not-found-page">
+      <p class="not-found-page__code">404</p>
+      <p class="not-found-page__message">{{ 'notFound.message' | translate }}</p>
+      <button uiButton type="button" (click)="back()">
+        {{ 'common.backToList' | translate }}
+      </button>
+    </div>
+  </ui-card>
+</app-page-container>
