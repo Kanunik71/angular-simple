@@ -88,7 +88,8 @@ pages     ->  *.routes.ts + <name>-page/<name>-page.ts  ->  *.state.ts  ->  Auth
                                                            |
                                                            v
 entities  ->  <entity>/<component>/<component>.ts
-services  ->  <entity>/<entity>.service.ts + <entity>.mapper.ts
+services  ->  <entity>/<entity>.service.ts
+mappers   ->  <entity>/<entity>.mapper.ts
 models    ->  типы по сущностям
 ui-core   ->  components/{common,form,layout,modal} + services
 utils     ->  классы со статическими методами
@@ -138,10 +139,18 @@ Barrel-файлов нет: импортируем нужный файл нап�
 - Не знает про `pages` и `entities`. Сервис не знает, кто его зовёт.
 - Не держит состояние: ни `signal`, ни подписки. Возвращает `Observable`. Состояние живёт в `*.state.ts`
 - `providedIn: 'root'`, в отличие от state
-- Маппер лежит рядом, `services/<entity>/<entity>.mapper.ts`, и ничего не знает про DI — это класс со статическими методами
 - Подтверждение и текстовые ключи действия живут в сценарном сервисе, а не в data-сервисе и не в каждой странице. Саму модалку открывает `ConfirmService` из `ui-core`
 
-Порядок такой: `*.state.ts` → сервис → API. State отвечает за реактивность и за тексты ошибок, сервис — за форму данных, API — за провод.
+Порядок такой: `*.state.ts` → сервис → маппер → API. State отвечает за реактивность и за тексты ошибок, сервис — за форму данных, маппер — за преобразование ответа, API — за провод.
+
+## mappers
+
+Слой `src/app/mappers` — преобразование ответов API в доменные модели. Подпапка на сущность, файл `<entity>.mapper.ts`: `mappers/user/user.mapper.ts`, `mappers/auth/auth.mapper.ts`.
+
+- Класс со статическими методами, без DI и состояния
+- Зависит только от `models`: на вход `<entity>-response.models.ts`, на выход `<entity>.models.ts`
+- Не знает про `services`, `pages`, `entities` и `core`
+- Сервис вызывает маппер; сама связь «ответ → домен» выражена здесь, а не в модели
 
 Маппер считает доменные поля. Роль не нормализуется: response типизирован `UserRoleEnum`, поэтому неожиданное значение с сервера считается нарушением контракта.
 
@@ -285,7 +294,7 @@ Backdrop модалки — единственное глобальное пра
 1. Создать `src/app/pages/<name>/` со своим `<name>.routes.ts` и страницей. Каждый компонент лежит в своей папке с файлами одного имени: `<name>-page/<name>-page.ts`; state страницы — рядом, `<name>-page/<name>-page.state.ts`. Подкомпоненты страницы — так же, в `<component>/<component>.ts`, как в `ui-core`; когда такой подкомпонент понадобится второй странице, он переезжает в `src/app/entities/<entity>/`.
 2. Подключить маршруты через `loadChildren` и закрыть их `authGuard`, если страница не публичная. Сегменты пути берутся из enum, в `app.routes.ts` — `AppRouteEnum`.
 3. Провайдить `PageState` на компоненте страницы, а не в `root`, и запускать загрузку из `ngOnInit`.
-4. Ходить в бекенд через отдельный API-класс и `HttpClient`. Доступ приложения к API — через `src/app/services/<entity>/<entity>.service.ts`, который маппит ответы в доменные модели.
+4. Ходить в бекенд через отдельный API-класс и `HttpClient`. Доступ приложения к API — через `src/app/services/<entity>/<entity>.service.ts`; ответы в доменные модели переводит `src/app/mappers/<entity>/<entity>.mapper.ts`.
 5. Новый ответ мока добавить в `*.api.mock.ts` рядом с его API-классом и в карту маршрутов `MockBackend`.
 6. Повторяемые контролы класть в `ui-core/components` в подходящую группу: `common`, `form`, `layout`, `modal`; сервисы `ui-core` — в `ui-core/services`. Утилиты — классом со статическими методами в `src/app/utils`. Знания о сущности — типы, списки значений и подписи — класть в `src/app/models/<entity>/`: интерфейс с суффиксом `Model`, перечисление с `Enum`, остальные `type` с `Type`, файл с `.models.ts`.
 7. Стили страницы писать по БЭМ и на токенах из `variables.scss`. Новый сырой цвет — только в `palette.scss`. Размеры в `px`, без `rem` и `em`.

@@ -3,7 +3,7 @@ import { Observable, map } from 'rxjs';
 
 import { LoginRequestModel, SessionObject } from '../../models/auth/auth.models';
 import { AuthApi } from '../../core/api/auth.api';
-import { AuthMapper } from './auth.mapper';
+import { AuthMapper } from '../../mappers/auth/auth.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

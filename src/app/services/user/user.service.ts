@@ -5,7 +5,7 @@ import { ListPageModel, ListQueryModel } from '../../models/common/list.models';
 import { UserDraftModel, UserObject } from '../../models/user/user.models';
 import { UserFilterModel } from '../../models/user/user-filter.models';
 import { UsersApi } from '../../core/api/users.api';
-import { UserMapper } from './user.mapper';
+import { UserMapper } from '../../mappers/user/user.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
