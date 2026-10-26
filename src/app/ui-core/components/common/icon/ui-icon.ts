@@ -1,9 +1,10 @@
 import { Component, computed, input } from '@angular/core';
 
-export type UiIconName = 'close' | 'trash';
+export type UiIconName = 'chevron-down' | 'close' | 'trash';
 export type UiIconSize = 'sm' | 'md' | 'lg';
 
 const ICON_PATHS: Record<UiIconName, readonly string[]> = {
+  'chevron-down': ['M6 9l6 6 6-6'],
   close: ['M6 6l12 12', 'M18 6 6 18'],
   trash: [
     'M3 6h18',

@@ -9,7 +9,7 @@
 - Angular 21, standalone-компоненты, zoneless change detection, signals
 - `HttpClient` и functional interceptors
 - Reactive forms
-- Angular CDK: overlay и focus trap для модалки
+- Angular CDK: overlay и listbox для селекта, focus trap для модалки
 - `@ngx-translate/core` — локализация, язык пока один
 - SCSS, БЭМ, CSS-переменные
 
@@ -253,7 +253,7 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 - `ui-icon` рисует inline SVG из карты в коде, принимает `name` и `size` (`sm` 16px, `md` 20px, `lg` 24px), цвет наследует через `currentColor`.
 - `ui-filters` — только раскладка фильтров: grid и `ng-content`. `FormGroup` и сами поля остаются на странице; компонент не знает ни про сущность, ни про состав фильтров.
 - `ui-input` и `ui-select` реализуют `ControlValueAccessor`.
-- В `ui-select` выбранный вариант помечается через `[selected]` на `<option>`, а не через `[value]` на `<select>`: биндинг `value` применяется раньше, чем `@for` создаёт сами `<option>`, и значение терялось бы.
+- `ui-select` — кастомный селект: кнопка-триггер, панель в `CdkConnectedOverlay` и список на `CdkListbox`. Нативного `<select>` нет; выбранный вариант ведёт `CdkListbox`, панель стилизована в `ui-select.scss`.
 - `UiSelectOption.labelKey` — это ключ перевода, `ui-select` прогоняет его через `| translate` сам. Вызывающий код подписи не переводит.
 - `ui-modal` переносит панель в CDK Overlay, ловит фокус через `cdkTrapFocus` и закрывается по backdrop, Escape и кнопке.
 - `ConfirmService.ask` держит только одну активную модалку подтверждения: новый вызов и переход по маршруту закрывают предыдущую. Текстовые ключи передаёт вызывающий сценарный сервис.
@@ -261,7 +261,7 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 
 ## ARIA
 
-ARIA пока не поддерживаем: не добавляем `aria-*`, ARIA-роли (`role="..."`, `[attr.role]`) и `ariaCurrentWhenActive`. Это временное ограничение, а не пропуск в конкретном компоненте.
+ARIA вручную пока не поддерживаем: не добавляем `aria-*`, ARIA-роли (`role="..."`, `[attr.role]`) и `ariaCurrentWhenActive`. Это временное ограничение, а не пропуск в конкретном компоненте. Исключение — `CdkListbox` внутри `ui-select`: он сам проставляет `role="listbox"/"option"` и `aria-*`, не дублируем и не переопределяем их.
 
 ## Стили
 
