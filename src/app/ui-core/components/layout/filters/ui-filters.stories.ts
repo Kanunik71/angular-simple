@@ -1,9 +1,9 @@
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular-vite';
 
-import { UiFormField } from '../form-field/ui-form-field';
-import { UiInput } from '../input/ui-input';
-import { UiSelect } from '../select/ui-select';
+import { UiFormField } from '../../form/form-field/ui-form-field';
+import { UiInput } from '../../form/input/ui-input';
+import { UiSelect } from '../../form/select/ui-select';
 import { UiFilters } from './ui-filters';
 
 const options = [
@@ -18,7 +18,7 @@ const createForm = () =>
   });
 
 const meta: Meta<UiFilters> = {
-  title: 'UI Core/Form/Filters',
+  title: 'UI Core/Layout/Filters',
   component: UiFilters,
   tags: ['autodocs'],
   decorators: [

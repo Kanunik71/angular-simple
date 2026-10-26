@@ -11,11 +11,11 @@ import { PageHeader } from '../../../layout/page-header/page-header';
 import { UiAlert } from '../../../ui-core/components/common/alert/ui-alert';
 import { UiButton } from '../../../ui-core/components/common/button/ui-button';
 import { UiSpinner } from '../../../ui-core/components/common/spinner/ui-spinner';
-import { UiFilters } from '../../../ui-core/components/form/filters/ui-filters';
 import { UiFormField } from '../../../ui-core/components/form/form-field/ui-form-field';
 import { UiInput } from '../../../ui-core/components/form/input/ui-input';
 import { UiSelect } from '../../../ui-core/components/form/select/ui-select';
 import { UiCard } from '../../../ui-core/components/layout/card/ui-card';
+import { UiFilters } from '../../../ui-core/components/layout/filters/ui-filters';
 import { UiPagination } from '../../../ui-core/components/layout/pagination/ui-pagination';
 import {
   UiTable,

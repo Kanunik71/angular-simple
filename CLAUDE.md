@@ -240,8 +240,8 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 Компоненты лежат в `components/` и сгруппированы по назначению:
 
 - `components/common/` — `ui-alert`, `ui-button`, `ui-icon`, `ui-skeleton`, `ui-spinner`, `ui-toast`
-- `components/form/` — `ui-form`, `ui-form-actions`, `ui-filters`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
-- `components/layout/` — `ui-card`, `ui-pagination`, `ui-table`
+- `components/form/` — `ui-form`, `ui-form-actions`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
+- `components/layout/` — `ui-card`, `ui-filters`, `ui-pagination`, `ui-table`
 - `components/modal/` — `ui-modal`, `ui-confirm-modal`
 
 Сервисы лежат в `services/`:
