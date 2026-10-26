@@ -1,29 +1,29 @@
 <section class="login-page">
   <ui-card class="login-page__card">
-    <ui-form [formGroup]="form" (submitted)="submit()">
+    <ui-form [formGroup]="state.form" (submitted)="state.submit()">
       <header class="login-page__header">
         <h1 class="login-page__title">{{ 'login.title' | translate }}</h1>
         <p class="login-page__hint">{{ 'login.hint' | translate }}</p>
       </header>
 
       <ui-form-field labelKey="login.username">
-        <ui-input autocomplete="username" [formControl]="form.controls.username" />
+        <ui-input autocomplete="username" [formControl]="state.form.controls.username" />
       </ui-form-field>
       <ui-form-field labelKey="login.password">
         <ui-input
           type="password"
           autocomplete="current-password"
-          [formControl]="form.controls.password"
+          [formControl]="state.form.controls.password"
         />
       </ui-form-field>
 
-      @if (error()) {
-        <ui-alert>{{ error() }}</ui-alert>
+      @if (state.error()) {
+        <ui-alert>{{ state.error() }}</ui-alert>
       }
 
       <ui-form-actions>
-        <button uiButton class="login-page__submit" type="submit" [disabled]="loading()">
-          {{ (loading() ? 'login.submitting' : 'login.submit') | translate }}
+        <button uiButton type="submit" [fullWidth]="true" [disabled]="state.loading()">
+          {{ (state.loading() ? 'login.submitting' : 'login.submit') | translate }}
         </button>
       </ui-form-actions>
     </ui-form>

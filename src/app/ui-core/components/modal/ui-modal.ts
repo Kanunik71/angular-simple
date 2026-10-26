@@ -1,9 +1,11 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { Component, input, output } from '@angular/core';
 
+import { UiIcon } from '../common/icon/ui-icon';
+
 @Component({
   selector: 'ui-modal',
-  imports: [CdkTrapFocus],
+  imports: [CdkTrapFocus, UiIcon],
   templateUrl: './ui-modal.html',
   styleUrl: './ui-modal.scss',
 })

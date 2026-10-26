@@ -1,7 +1,9 @@
 <div class="ui-modal" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
   <header class="ui-modal__header">
     <h2 class="ui-modal__title">{{ title() }}</h2>
-    <button type="button" class="ui-modal__close" (click)="requestClose()">A-</button>
+    <button type="button" class="ui-modal__close" (click)="requestClose()">
+      <ui-icon name="close" size="md" />
+    </button>
   </header>
   <div class="ui-modal__body">
     <ng-content />

@@ -24,6 +24,10 @@
   cursor: not-allowed;
 }
 
+:host(.ui-button--full) {
+  width: 100%;
+}
+
 :host(.ui-button--secondary) {
   background: var(--color-surface);
   color: var(--color-text);

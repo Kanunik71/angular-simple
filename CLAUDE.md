@@ -49,7 +49,7 @@ npx prettier --check "src/**/*.{ts,html,scss}"
 
 Форма пользователя — отдельная страница, а не модалка. `/users/new` и `/users/:id/edit` рендерят один компонент `UserCreateUpdatePage` и различаются наличием параметра `id`.
 
-У каждой страницы свой state: `UsersPageState` у списка и `UserCreateUpdatePageState` у формы. Оба провайдятся на компонентах страниц; загрузка запускается из `ngOnInit`. После сохранения форма возвращается на список, и список загружается заново — фильтры и номер страницы при этом сбрасываются.
+У каждой страницы свой state: `LoginPageState` у входа, `UsersPageState` у списка и `UserCreateUpdatePageState` у формы. Все провайдятся на компонентах страниц; загрузка запускается из `ngOnInit`. После сохранения форма возвращается на список, и список загружается заново — фильтры и номер страницы при этом сбрасываются.
 
 Неавторизованный переход на любой другой адрес приводит к `/login`. Авторизованный переход на `/login` приводит к `/users`.
 
@@ -227,6 +227,7 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 Файл `*.state.ts` — класс со `signal` и `computed`. Если страница владеет формой, `FormGroup` лежит в state; шаблон читает signals и эту форму. Подписка на HTTP остаётся внутри state.
 
 - `AuthState` — сессия всего приложения, `providedIn: 'root'`
+- `LoginPageState` — форма входа, `loading` и `error` делегирует в `AuthState`, после успешного входа переводит на список; провайдится на `LoginPage`
 - `UsersPageState` — список, фильтры и удаление; `list: ListState`, `filterForm: FormGroup`, `loader: LoaderState`; провайдится на `UsersPage`, загрузка запускается из `ngOnInit`
 - `UserCreateUpdatePageState` — загрузка, валидация, подготовка draft и сохранение пользователя; `loader: LoaderState`, `form: FormGroup`; провайдится на `UserCreateUpdatePage`, загрузка запускается из `ngOnInit`
 
@@ -238,7 +239,7 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 
 Компоненты лежат в `components/` и сгруппированы по назначению:
 
-- `components/common/` — `ui-alert`, `ui-button`, `ui-skeleton`, `ui-spinner`, `ui-toast`
+- `components/common/` — `ui-alert`, `ui-button`, `ui-icon`, `ui-skeleton`, `ui-spinner`, `ui-toast`
 - `components/form/` — `ui-form`, `ui-form-actions`, `ui-filters`, `ui-form-field`, `ui-input`, `ui-select`; общий стиль контролов — `field/ui-field.scss`
 - `components/layout/` — `ui-card`, `ui-pagination`, `ui-table`
 - `components/modal/` — `ui-modal`, `ui-confirm-modal`
@@ -248,7 +249,8 @@ HTTP-лоадер не нужен: словарь лежит в коде. Под
 - `ToastService` — `services/toast.service.ts`
 - `ModalService` / `ModalRef` / `ConfirmService` — `services/modal/`
 
-- `button[uiButton]` — варианты `primary`, `secondary`, `ghost`, `danger`. Нативный `type` и `disabled` остаются на кнопке.
+- `button[uiButton]` — варианты `primary`, `secondary`, `ghost`, `danger`; `fullWidth` растягивает кнопку на 100%. Нативный `type` и `disabled` остаются на кнопке.
+- `ui-icon` рисует inline SVG из карты в коде, принимает `name` и `size` (`sm` 16px, `md` 20px, `lg` 24px), цвет наследует через `currentColor`.
 - `ui-filters` — только раскладка фильтров: grid и `ng-content`. `FormGroup` и сами поля остаются на странице; компонент не знает ни про сущность, ни про состав фильтров.
 - `ui-input` и `ui-select` реализуют `ControlValueAccessor`.
 - В `ui-select` выбранный вариант помечается через `[selected]` на `<option>`, а не через `[value]` на `<select>`: биндинг `value` применяется раньше, чем `@for` создаёт сами `<option>`, и значение терялось бы.

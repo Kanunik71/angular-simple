@@ -1,9 +1,11 @@
 import { Component, input, output } from '@angular/core';
 
 import { ToastVariant } from '../../../services/toast.service';
+import { UiIcon } from '../icon/ui-icon';
 
 @Component({
   selector: 'ui-toast',
+  imports: [UiIcon],
   host: {
     class: 'ui-toast',
     '[class.ui-toast--info]': 'variant() === "info"',
