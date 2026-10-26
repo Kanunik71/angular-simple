@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 
-const TOKEN_KEY = 'exam.accessToken';
+import { TOKEN_STORAGE_KEY } from './token-storage-key';
 
 @Injectable({ providedIn: 'root' })
 export class TokenStorage {
   read(): string | null {
-    return sessionStorage.getItem(TOKEN_KEY);
+    return sessionStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
   write(token: string): void {
-    sessionStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
   }
 
   clear(): void {
-    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_STORAGE_KEY);
   }
 }

@@ -1,21 +1,31 @@
 <td uiTableCell>
   <div class="user-list-row__user">
     <span class="user-list-row__avatar">{{ user().initials }}</span>
-    <span>{{ user().fullName }}</span>
+    <span data-testid="user-name">{{ user().fullName }}</span>
   </div>
 </td>
-<td uiTableCell>{{ user().email }}</td>
+<td uiTableCell data-testid="user-email">{{ user().email }}</td>
 <td uiTableCell>
-  <span class="user-list-row__role" [class.user-list-row__role--admin]="user().isAdmin">
+  <span
+    class="user-list-row__role"
+    data-testid="user-role"
+    [class.user-list-row__role--admin]="user().isAdmin"
+  >
     {{ roleLabelKey(user().role) | translate }}
   </span>
 </td>
 <td uiTableCell align="right">
   <div class="user-list-row__actions">
-    <button uiButton type="button" variant="ghost" (click)="edit.emit()">
+    <button uiButton type="button" variant="ghost" data-testid="user-edit" (click)="edit.emit()">
       {{ 'users.edit' | translate }}
     </button>
-    <button uiButton type="button" variant="danger" (click)="remove.emit()">
+    <button
+      uiButton
+      type="button"
+      variant="danger"
+      data-testid="user-remove"
+      (click)="remove.emit()"
+    >
       {{ 'users.remove' | translate }}
     </button>
   </div>

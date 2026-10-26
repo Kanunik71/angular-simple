@@ -17,7 +17,7 @@ export interface UiConfirmModalConfig {
 @Component({
   selector: 'ui-confirm-modal',
   imports: [TranslatePipe, UiButton, UiModal],
-  host: { class: 'ui-confirm-modal' },
+  host: { class: 'ui-confirm-modal', 'data-testid': 'confirm-modal' },
   templateUrl: './ui-confirm-modal.html',
   styleUrl: './ui-confirm-modal.scss',
 })

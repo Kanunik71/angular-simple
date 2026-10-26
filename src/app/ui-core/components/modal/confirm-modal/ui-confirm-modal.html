@@ -1,10 +1,24 @@
 <ui-modal [title]="titleKey() | translate" (closed)="close(false)">
-  <p class="ui-confirm-modal__message">{{ messageKey() | translate: messageParams() }}</p>
+  <p class="ui-confirm-modal__message" data-testid="confirm-modal-message">
+    {{ messageKey() | translate: messageParams() }}
+  </p>
   <div class="ui-confirm-modal__actions">
-    <button uiButton type="button" variant="secondary" (click)="close(false)">
+    <button
+      uiButton
+      type="button"
+      variant="secondary"
+      data-testid="confirm-modal-cancel"
+      (click)="close(false)"
+    >
       {{ cancelLabelKey() | translate }}
     </button>
-    <button uiButton type="button" [variant]="variant()" (click)="close(true)">
+    <button
+      uiButton
+      type="button"
+      data-testid="confirm-modal-confirm"
+      [variant]="variant()"
+      (click)="close(true)"
+    >
       {{ confirmLabelKey() | translate }}
     </button>
   </div>

@@ -1,19 +1,21 @@
 <app-page-container>
   <app-page-header [title]="'users.title' | translate">
-    <button uiButton type="button" (click)="openCreate()">{{ 'users.add' | translate }}</button>
+    <button uiButton type="button" data-testid="users-add" (click)="openCreate()">
+      {{ 'users.add' | translate }}
+    </button>
   </app-page-header>
 
   <ui-filters [formGroup]="state.filterForm">
-    <ui-form-field labelKey="users.search">
+    <ui-form-field labelKey="users.search" data-testid="users-search-field">
       <ui-input autocomplete="off" [formControl]="state.filterForm.controls.search" />
     </ui-form-field>
-    <ui-form-field labelKey="users.columnRole">
+    <ui-form-field labelKey="users.columnRole" data-testid="users-role-field">
       <ui-select [formControl]="state.filterForm.controls.role" [options]="roleFilterOptions" />
     </ui-form-field>
   </ui-filters>
 
   @if (state.loader.error()) {
-    <ui-alert>{{ state.loader.error() }}</ui-alert>
+    <ui-alert data-testid="users-error">{{ state.loader.error() }}</ui-alert>
   }
 
   @if (state.loader.refreshing()) {
@@ -39,6 +41,8 @@
         <ng-template uiTableRow let-user>
           <tr
             app-user-list-row
+            data-testid="user-row"
+            [attr.data-user-email]="user.email"
             [user]="user"
             (edit)="openEdit(user)"
             (remove)="requestDelete(user)"

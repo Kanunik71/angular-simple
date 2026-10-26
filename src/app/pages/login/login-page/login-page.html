@@ -6,10 +6,10 @@
         <p class="login-page__hint">{{ 'login.hint' | translate }}</p>
       </header>
 
-      <ui-form-field labelKey="login.username">
+      <ui-form-field labelKey="login.username" data-testid="login-username-field">
         <ui-input autocomplete="username" [formControl]="state.form.controls.username" />
       </ui-form-field>
-      <ui-form-field labelKey="login.password">
+      <ui-form-field labelKey="login.password" data-testid="login-password-field">
         <ui-input
           type="password"
           autocomplete="current-password"
@@ -18,11 +18,17 @@
       </ui-form-field>
 
       @if (state.error()) {
-        <ui-alert>{{ state.error() }}</ui-alert>
+        <ui-alert data-testid="login-error">{{ state.error() }}</ui-alert>
       }
 
       <ui-form-actions>
-        <button uiButton type="submit" [fullWidth]="true" [disabled]="state.loading()">
+        <button
+          uiButton
+          type="submit"
+          data-testid="login-submit"
+          [fullWidth]="true"
+          [disabled]="state.loading()"
+        >
           {{ (state.loading() ? 'login.submitting' : 'login.submit') | translate }}
         </button>
       </ui-form-actions>

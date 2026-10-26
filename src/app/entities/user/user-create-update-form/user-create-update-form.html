@@ -1,9 +1,9 @@
-<ui-form-field labelKey="userForm.name">
+<ui-form-field labelKey="userForm.name" data-testid="user-form-name-field">
   <ui-input [formControl]="form().controls.fullName" />
 </ui-form-field>
-<ui-form-field labelKey="userForm.email">
+<ui-form-field labelKey="userForm.email" data-testid="user-form-email-field">
   <ui-input type="email" autocomplete="off" [formControl]="form().controls.email" />
 </ui-form-field>
-<ui-form-field labelKey="userForm.role">
+<ui-form-field labelKey="userForm.role" data-testid="user-form-role-field">
   <ui-select [formControl]="form().controls.role" [options]="roles" />
 </ui-form-field>

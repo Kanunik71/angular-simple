@@ -8,6 +8,7 @@ import { UiIcon } from '../icon/ui-icon';
   imports: [UiIcon],
   host: {
     class: 'ui-toast',
+    'data-testid': 'toast',
     '[class.ui-toast--info]': 'variant() === "info"',
     '[class.ui-toast--error]': 'variant() === "error"',
     '[class.ui-toast--success]': 'variant() === "success"',

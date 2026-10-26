@@ -1,9 +1,16 @@
 <nav class="ui-pagination">
-  <button uiButton type="button" variant="secondary" [disabled]="page() <= 1" (click)="previous()">
+  <button
+    uiButton
+    type="button"
+    variant="secondary"
+    data-testid="pagination-prev"
+    [disabled]="page() <= 1"
+    (click)="previous()"
+  >
     {{ 'pagination.previous' | translate }}
   </button>
 
-  <span class="ui-pagination__status">
+  <span class="ui-pagination__status" data-testid="pagination-status">
     {{ 'pagination.page' | translate: { page: page(), total: pageCount() } }}
   </span>
 
@@ -11,6 +18,7 @@
     uiButton
     type="button"
     variant="secondary"
+    data-testid="pagination-next"
     [disabled]="page() >= pageCount()"
     (click)="next()"
   >

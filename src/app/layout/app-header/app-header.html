@@ -14,10 +14,10 @@
 
     @if (session(); as current) {
       <div class="app-header__user">
-        <span class="app-header__username">
+        <span class="app-header__username" data-testid="app-session">
           {{ 'app.session' | translate: { username: current.username } }}
         </span>
-        <button uiButton type="button" variant="ghost" (click)="logout()">
+        <button uiButton type="button" variant="ghost" data-testid="app-logout" (click)="logout()">
           {{ 'app.logout' | translate }}
         </button>
       </div>

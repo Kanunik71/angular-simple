@@ -1,6 +1,6 @@
 <app-page-container width="narrow">
   <app-page-header [title]="titleKey() | translate">
-    <button uiButton type="button" variant="ghost" (click)="back()">
+    <button uiButton type="button" variant="ghost" data-testid="user-form-back" (click)="back()">
       {{ 'common.backToList' | translate }}
     </button>
   </app-page-header>
@@ -18,7 +18,7 @@
       </div>
     } @else if (!state.loader.loaded()) {
       <div class="user-create-update-page__missing">
-        <ui-alert>{{ state.loader.error() }}</ui-alert>
+        <ui-alert data-testid="user-form-missing-error">{{ state.loader.error() }}</ui-alert>
         <button uiButton type="button" (click)="back()">
           {{ 'common.backToList' | translate }}
         </button>
@@ -28,14 +28,25 @@
         <app-user-create-update-form [form]="state.form" />
 
         @if (state.loader.error()) {
-          <ui-alert>{{ state.loader.error() }}</ui-alert>
+          <ui-alert data-testid="user-form-error">{{ state.loader.error() }}</ui-alert>
         }
 
         <ui-form-actions>
-          <button uiButton type="button" variant="secondary" (click)="back()">
+          <button
+            uiButton
+            type="button"
+            variant="secondary"
+            data-testid="user-form-cancel"
+            (click)="back()"
+          >
             {{ 'common.cancel' | translate }}
           </button>
-          <button uiButton type="submit" [disabled]="state.loader.loading()">
+          <button
+            uiButton
+            type="submit"
+            data-testid="user-form-save"
+            [disabled]="state.loader.loading()"
+          >
             {{ (state.loader.loading() ? 'userForm.saving' : 'userForm.save') | translate }}
           </button>
         </ui-form-actions>
