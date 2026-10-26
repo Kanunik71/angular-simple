@@ -102,7 +102,7 @@ core      ->  инфраструктура: api, http, auth, router
 
 Слой моделей — `src/app/models`, подпапка на сущность, файл на группу типов. У всех файлов суффикс `.models.ts` — без исключений, включая не только типы.
 
-- `models/user/` — `user.models.ts` (`UserObject`, `UserDraftModel`, `UserRoleEnum`), `user-response.models.ts` (`UserResponseModel`), `user-role.models.ts` (`UserRoleOptionModel`, `ROLE_OPTIONS`, `roleLabelKey`)
+- `models/user/` — `user.models.ts` (`UserObject`, `UserDraftModel`), `user-response.models.ts` (`UserResponseModel`), `user-role.models.ts` (`UserRoleEnum`, `UserRoleOptionModel`, `ROLE_OPTIONS`, `roleLabelKey`)
 - `models/auth/` — `auth.models.ts`: `LoginRequestModel`, `SessionObject`, `JwtPayloadModel`; `auth-response.models.ts`: `LoginResponseModel`
 - `models/common/` — `common.models.ts`: `ApiErrorBodyModel`, общий контракт ошибки
 
@@ -114,8 +114,8 @@ core      ->  инфраструктура: api, http, auth, router
 
 Типы делятся на два слоя, и разница видна по имени файла.
 
-- `<entity>-response.models.ts` — то, что приходит с сервера. Поля там ровно те, что в ответе, и типы ослаблены: `UserResponseModel.role` это `string`, а не `UserRoleEnum`. Сервер не гарантирует нам enum.
-- `<entity>.models.ts` — домен. `UserObject implements UserResponseModel` сужает `role` до `UserRoleEnum` и добавляет то, что считает маппер: `initials`, `isAdmin`.
+- `<entity>-response.models.ts` — то, что приходит с сервера. Поля там ровно те, что в ответе; `UserResponseModel.role` и `LoginResponseModel.role` типизированы как `UserRoleEnum`, потому что сервер отдаёт одно из известных значений.
+- `<entity>.models.ts` — домен. `UserObject implements UserResponseModel` добавляет то, что считает маппер: `initials`, `isAdmin`.
 
 Наследование ставим, когда это тот же объект с большей детализацией. Если сущности разные, даже при совпадении полей, наследования нет — связь выражает маппер. `SessionObject` не наследует `LoginResponseModel`: ответ логина и сессия приложения — разные сущности, они просто похожи.
 
@@ -127,7 +127,7 @@ core      ->  инфраструктура: api, http, auth, router
 
 Модель не знает про `ui-core`. Тип элемента списка описываем сами (`UserRoleOptionModel`), а не импортируем `UiSelectOption`: структурная совместимость позволяет передать его в селект без обратной зависимости.
 
-Barrel-файлов нет: импортируем нужный файл напрямую. Одна сущность тянет другую только явным импортом, например `models/auth/auth.models.ts` берёт `UserRoleEnum` из `models/user/user.models.ts`.
+Barrel-файлов нет: импортируем нужный файл напрямую. Одна сущность тянет другую только явным импортом, например `models/auth/auth.models.ts` берёт `UserRoleEnum` из `models/user/user-role.models.ts`.
 
 `ui-core` не знает про пользователей и авторизацию. Компоненты получают данные через `input`, `output` и reactive forms.
 
@@ -143,7 +143,7 @@ Barrel-файлов нет: импортируем нужный файл нап�
 
 Порядок такой: `*.state.ts` → сервис → API. State отвечает за реактивность и за тексты ошибок, сервис — за форму данных, API — за провод.
 
-Маппер сужает типы и считает доменные поля. Неизвестная роль сейчас тихо становится `'user'` — это осознанно мягко, чтобы мусор в ответе не ронял экран. Если сервер начнёт присылать мусор молча, это станет источником багов: заменить `toRole` на бросок исключения.
+Маппер считает доменные поля. Роль не нормализуется: response типизирован `UserRoleEnum`, поэтому неожиданное значение с сервера считается нарушением контракта.
 
 ## entities
 

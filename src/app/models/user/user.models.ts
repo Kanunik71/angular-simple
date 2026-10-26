@@ -1,6 +1,5 @@
 import { UserResponseModel } from './user-response.models';
-
-export type UserRoleEnum = 'admin' | 'user';
+import { UserRoleEnum } from './user-role.models';
 
 export class UserObject implements UserResponseModel {
   constructor(

@@ -5,9 +5,10 @@ import { Observable, of } from 'rxjs';
 import { InMemoryDb } from '../http/in-memory-db';
 import { ApiErrorCodeEnum } from '../../models/common/common.models';
 import { ListPageModel, ListQueryModel } from '../../models/common/list.models';
-import { UserDraftModel, UserRoleEnum } from '../../models/user/user.models';
+import { UserDraftModel } from '../../models/user/user.models';
 import { UserFilterModel } from '../../models/user/user-filter.models';
 import { UserResponseModel } from '../../models/user/user-response.models';
+import { UserRoleEnum } from '../../models/user/user-role.models';
 import { Mock } from '../../utils/mock/mock';
 import { UsersApiContract } from './users.api';
 

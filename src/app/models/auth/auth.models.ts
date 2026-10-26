@@ -1,4 +1,4 @@
-import { UserRoleEnum } from '../user/user.models';
+import { UserRoleEnum } from '../user/user-role.models';
 
 export interface LoginRequestModel {
   username: string;

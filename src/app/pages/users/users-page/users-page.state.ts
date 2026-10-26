@@ -4,7 +4,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 
 import { DEFAULT_USER_FILTER, UserFilterModel } from '../../../models/user/user-filter.models';
-import { UserObject, UserRoleEnum } from '../../../models/user/user.models';
+import { UserObject } from '../../../models/user/user.models';
+import { UserRoleEnum } from '../../../models/user/user-role.models';
 import { LoaderState } from '../../../core/state/loader.state';
 import { ListState } from '../../../core/state/list.state';
 import { UserActionService } from '../../../services/user/user-action.service';

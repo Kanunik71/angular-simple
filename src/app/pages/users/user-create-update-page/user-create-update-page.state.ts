@@ -4,7 +4,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, catchError } from 'rxjs';
 
-import { UserDraftModel, UserRoleEnum } from '../../../models/user/user.models';
+import { UserDraftModel } from '../../../models/user/user.models';
+import { UserRoleEnum } from '../../../models/user/user-role.models';
 import { LoaderState } from '../../../core/state/loader.state';
 import { UserService } from '../../../services/user/user.service';
 import { ToastService } from '../../../ui-core/services/toast.service';

@@ -1,5 +1,5 @@
 import { JwtPayloadModel } from '../../models/auth/auth.models';
-import { UserRoleEnum } from '../../models/user/user.models';
+import { UserRoleEnum } from '../../models/user/user-role.models';
 import { Base64Url } from '../base64/base64-url';
 
 export class Jwt {

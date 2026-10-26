@@ -1,4 +1,4 @@
-import { UserRoleEnum } from './user.models';
+export type UserRoleEnum = 'admin' | 'user';
 
 export interface UserRoleOptionModel {
   value: UserRoleEnum;

@@ -1,4 +1,4 @@
-import { UserRoleEnum } from './user.models';
+import { UserRoleEnum } from './user-role.models';
 
 export interface UserFilterModel {
   search: string;
